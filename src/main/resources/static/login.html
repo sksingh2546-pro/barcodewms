@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | WMS</title>
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="libs/toastify.min.css">
+
+</head>
+
+<body>
+    <nav style="border-bottom:1px solid #333 ;">
+        <h6 class="float-left">WMS</h6>
+        
+    </nav>
+    <div class="wrapper py-4" style="margin:auto">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 px-5">
+                    <div class=""><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                    <div class="card shadow-lg border-0 mt-4" style="border-radius: 50px;overflow: hidden;">
+                        <div class="card-body bg-theme text-light pt-5 px-4">
+                            <form>
+                                <div class="form-group">
+                                    <label class="small mb-1" for="email">Username</label>
+                                    <input class="form-control py-2" id="email" type="text" placeholder="Enter Username" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="small mb-1" for="password">Password</label>
+                                    <input class="form-control py-2" id="password" type="password" placeholder="Enter password" />
+                                </div>
+                                <!-- <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
+                                        <label class="custom-control-label" for="rememberPasswordCheck">Remember password</label>
+                                    </div>
+                                </div> -->
+                                <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+<!--                                    <a class="small text-light" href="password.html">Forgot Password?</a>-->
+                                    <a class="btn btn-outline-light px-4 py-2" id="login" onclick="login()" href="#">Login</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="libs/toastify.js"></script>
+
+    <script>
+
+    function login(){
+	var XHR = new XMLHttpRequest();
+	XHR.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	       // Typical action to be performed when the document is ready:
+	        var response = XHR.responseText;
+	        var result=JSON.parse(response);
+	        console.log(result);
+if(result.message=="Successful"){
+  Toastify({
+                            text: "Login Successfully ",
+                            duration: 1000,
+                            gravity: "top",
+                            position: 'center',
+                            backgroundColor: "#01cf68",
+                            close : true
+                          }).showToast();
+                          setTimeout(function(){window.location.href="index";},1000)
+
+}else{
+                    Toastify({
+                           text: "Please Enter Valid User Name And Password",
+                           duration: 3000,
+                           gravity: "top",
+                           position: 'center',
+                           backgroundColor: "#ff0000",
+                           close : true
+                        }).showToast();
+}
+	    }
+	};
+	XHR.open("GET", "api/getLogin?user_name="+document.getElementById("email").value+"&password="+document.getElementById("password").value, true);
+	XHR.send();
+	}
+    </script>
+</body>
+
+</html>

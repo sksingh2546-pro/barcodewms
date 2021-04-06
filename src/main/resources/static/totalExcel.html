@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WMS</title>
+    <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="libs/toastify.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/s.css">
+
+    <style>
+    #yourBtn {
+  position: relative;
+
+  font-family: calibri;
+  width: 150px;
+  padding: 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border: 1px dashed #BBB;
+  text-align: center;
+  background-color: #DDD;
+  cursor: pointer;
+}
+
+</style>
+    <style>
+        #watermark
+{
+ position:fixed;
+ bottom:15px;
+ right:5px;
+ opacity:0.5;
+ z-index:99;
+ color:white;
+}
+    </style>
+</head>
+
+<body>
+<nav style="border-bottom:1px solid #333 ;" width="100%" id="nav">
+    <h6 class="float-left">WMS</h6>
+    <button class="btn float-right my-1 mr-3" style="color: #fff;border-radius:20px;font-family: Calibri;"
+            onclick="location.href='/'"
+    >
+        <b>Logout<i class="fas fa-sign-out-alt ml-2"></i></b>
+    </button>
+</nav>
+<div class="sideNavbar" id="side" style="max-height:100%;overflow-y:auto">
+    <ul>
+
+        <li class="sideActive" style="max-height:100%;overflow-y:auto">
+            <a href="index">
+                <i class="fas fa-chart-network mr-2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="header">
+            <span>IN</span>
+        </li>
+        <li class>
+            <a href="excelImport">
+                <i class="fas fa-file-excel mr-2"></i>
+                <span>Upload Product</span>
+            </a>
+        </li>
+        <li class>
+            <a href="todayStock">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Today's In Stock List</span>
+            </a>
+        </li>
+
+        <li class>
+            <a href="totalStock">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Total Stock List</span>
+            </a>
+        </li>
+        <li class>
+            <a href="totalExcel">
+                <i class="fas fa-file-excel mr-2"></i>
+                <span>Download All Stock</span>
+            </a>
+        </li>
+        <li class>
+            <a href="todayInExcel">
+                <i class="fas fa-file-excel mr-2"></i>
+                <span>Download In Stock</span>
+            </a>
+        </li>
+        <li class="header">
+            <span>OUT</span>
+        </li>
+        <li class>
+            <a href="out">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Make Order</span>
+            </a>
+        </li>
+        <li class>
+            <a href="StockOut">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Out Stock List</span>
+            </a>
+        </li>
+
+
+
+        <li class>
+            <a href="todayOutExcel">
+                <i class="fas fa-file-excel mr-2"></i>
+                <span>Download Out Stock</span>
+            </a>
+        </li>
+        <li class="header">
+            <span>Other</span>
+        </li>
+        <li class>
+            <a href="changePassword">
+                <i class="fas fa-key"></i>
+                <span>Change Password</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="wrapper py-4" id="d1">
+    <div class="content" >
+        <div class="container">
+            <div class="container-fluid">
+                <!-- <div class="myBox">-->
+                <div class="jumbotron" style="background: #D8D4D4;">
+                    <h1 class="pb-5 text-center">Download Total Stock</h1>
+                    <div class="row text-center py-2">
+                        <button class="btn bg-theme text-light mx-auto" style="background-color:black;border-color:blue; text-align:center " onclick="downloadExcel()">Download</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<!--<div id="myPopup"  class="shadow-lg">
+    <div class="popupHeader" style="display: flex;justify-content: space-between;align-items: center;">
+        <h6 class="font-weight-bold mt-1">ADD ITEMS</h6>
+        <i class="fas fa-times" onclick="closePopup()"></i>
+    </div>
+    <div class="popupBody">
+        <div class="my-3 flexSep">
+            <label >Barcode</label>
+            <input type="text" id="barcode"  placeholder="Enter barcode" value="" class="field" readonly>
+        </div>
+        <div class="my-3 flexSep">
+            <label>Product Name</label>
+            <input type="text" id="productName"  placeholder="Enter product name" class="field" readonly>
+        </div>
+
+        <div class="my-3 flexSep">
+            <label>Price</label>
+            <input type="number" id="price" placeholder="Enter Price" class="field" readonly>
+        </div>
+        <div class="my-3 flexSep">
+            <label>Quantity</label>
+            <input type="number" id="quantity" placeholder="Enter quantity" class="field" >
+        </div>
+
+        <div class="my-3 text-right">
+            <button type="button" id="add" onclick="validationAll()" >submit</button>
+        </div>
+    </div>
+</div>-->
+<!--<div id="backCover" ></div>-->
+<div id="watermark">
+    <img src="watermark.png">
+</div>
+</div>
+<script type="text/javascript" src="libs/toastify.js"></script>
+<!--<script src="stockManagement.js"></script>-->
+
+<script>
+ document.styleSheets[4].disabled = true;
+function getFile() {
+  document.getElementById("upfile").click();
+}
+function sub(obj) {
+  var file = obj.value;
+  var fileName = file.split("\\");
+  document.getElementById("yourBtn").innerHTML = fileName[fileName.length - 1];
+  event.preventDefault();
+}
+
+function downloadExcel(){
+window.location.href="/api/generateExcelStock";
+}
+</script>
+</body>
+
+</html>
