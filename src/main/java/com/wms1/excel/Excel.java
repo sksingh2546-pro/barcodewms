@@ -14,6 +14,7 @@ public class Excel {
     private int packaging;
     private float carton_gross_weight;
     private String hsn;
+    private String user_name;
 
 
     public long getId() {
@@ -73,15 +74,24 @@ public class Excel {
         this.num_pcs = num_pcs;
     }
 
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
     public Excel() {
     }
 
-    public Excel( String name_of_item, int num_pcs, float per_pcs_weight, int packaging, float carton_gross_weight, String hsn) {
+    public Excel(String name_of_item, int num_pcs, float per_pcs_weight, int packaging, float carton_gross_weight, String hsn, String user_name) {
         this.name_of_item = name_of_item;
         this.num_pcs = num_pcs;
         this.per_pcs_weight = per_pcs_weight;
         this.packaging = packaging;
         this.carton_gross_weight = carton_gross_weight;
         this.hsn = hsn;
+        this.user_name = user_name;
     }
 }

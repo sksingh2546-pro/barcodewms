@@ -19,7 +19,8 @@ public class ExcelController {
     ExcelRepo excelRepo;
 
     @PostMapping("uploadExcel")
-    public String uploadExcel(@RequestParam("file") MultipartFile multipartFile) {
+    public String uploadExcel(@RequestParam("file") MultipartFile multipartFile
+            ,@RequestParam("user_name") String user_name) {
         Workbook workbook = null;
         try {
             workbook = (Workbook) new XSSFWorkbook(multipartFile.getInputStream());
@@ -40,7 +41,8 @@ public class ExcelController {
                                 (float) sheet.getRow(i).getCell(2).getNumericCellValue(),
                                (int) sheet.getRow(i).getCell(3).getNumericCellValue(),
                                 (float) sheet.getRow(i).getCell(4).getNumericCellValue(),
-                                String.valueOf((long) sheet.getRow(i).getCell(5).getNumericCellValue()));
+                                String.valueOf((long) sheet.getRow(i).getCell(5).getNumericCellValue())
+                                 ,user_name);
                         int count=sheet.getRow(i).getPhysicalNumberOfCells();
                         System.out.println(count);
                         Excel excel1 = excelRepo.save(excel);
@@ -63,16 +65,18 @@ public class ExcelController {
 
 
     @GetMapping("getNameDetails")
-    public Map<String, List<Excel>>getAllList(@RequestParam("name_of_item")String name_of_item){
-        List<Excel>excels=excelRepo.getNameOfItemList(name_of_item);
+    public Map<String, List<Excel>>getAllList(@RequestParam("name_of_item")String name_of_item,
+                                              @RequestParam("user_name")String user_name){
+        List<Excel>excels=excelRepo.getNameOfItemList(name_of_item,user_name);
         HashMap<String,List<Excel>>hMap=new HashMap<>();
         hMap.put("itemDetails",excels);
         return hMap;
     }
     @GetMapping("getNameItemList")
-    public Map<String,Set<String>>getNameItemList(){
+    public Map<String,Set<String>>getNameItemList(@RequestParam("user_name")String user_name){
         Set<String>temp=new HashSet<>();
-        List<Excel>excelList= (List<Excel>) excelRepo.findAll();
+        List<Excel>excelList=excelRepo.getNameOfItemList1(user_name);
+       // List<Excel>excelList= (List<Excel>) excelRepo.findAll();
         for (Excel excel:excelList){
             temp.add(excel.getName_of_item());
         }
@@ -82,9 +86,9 @@ public class ExcelController {
     }
 
     @GetMapping("getAllData")
-    public Map<String,List<Excel>>getExcel(){
+    public Map<String,List<Excel>>getExcel(@RequestParam("user_name") String user_name){
         HashMap<String,List<Excel>>hMap=new HashMap<>();
-        hMap.put("product", (List<Excel>) excelRepo.findAll());
+        hMap.put("product", (List<Excel>) excelRepo.getNameOfItemList1(user_name));
         return hMap;
     }
 

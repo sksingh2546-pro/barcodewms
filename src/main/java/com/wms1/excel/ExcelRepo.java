@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ExcelRepo extends CrudRepository<Excel,Long> {
 
-    @Query("select sk from Excel sk where name_of_item=?1 ")
-    List<Excel> getNameOfItemList(String name_of_item);
+    @Query("select sk from Excel sk where name_of_item=?1 and user_name=?2")
+    List<Excel> getNameOfItemList(String name_of_item,String user_name);
+
+    @Query("select sk from Excel sk where user_name=?1 ")
+    List<Excel> getNameOfItemList1(String user_name);
 }

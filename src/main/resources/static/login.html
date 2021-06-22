@@ -33,14 +33,8 @@
                                     <label class="small mb-1" for="password">Password</label>
                                     <input class="form-control py-2" id="password" type="password" placeholder="Enter password" />
                                 </div>
-                                <!-- <div class="form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
-                                        <label class="custom-control-label" for="rememberPasswordCheck">Remember password</label>
-                                    </div>
-                                </div> -->
+
                                 <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-<!--                                    <a class="small text-light" href="password.html">Forgot Password?</a>-->
                                     <a class="btn btn-outline-light px-4 py-2" id="login" onclick="login()" href="#">Login</a>
                                 </div>
 
@@ -56,16 +50,17 @@
 
     <script>
 
-    function login(){
-	var XHR = new XMLHttpRequest();
-	XHR.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
+        function login(){
+	    var XHR = new XMLHttpRequest();
+	    XHR.onreadystatechange = function() {
+	            if (this.readyState == 4 && this.status == 200) {
 	       // Typical action to be performed when the document is ready:
-	        var response = XHR.responseText;
-	        var result=JSON.parse(response);
-	        console.log(result);
-if(result.message=="Successful"){
-  Toastify({
+	                var response = XHR.responseText;
+	                var result=JSON.parse(response);
+	                console.log(result);
+                if(result.message=="Successful"){
+                localStorage.setItem("user_name",document.getElementById("email").value);
+                Toastify({
                             text: "Login Successfully ",
                             duration: 1000,
                             gravity: "top",

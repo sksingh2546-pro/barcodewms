@@ -14,18 +14,18 @@ public interface ProductionRepo extends CrudRepository<Production,Long> {
 
     @Modifying
     @Query(value = "insert into production(barcode,name_of_item,per_pcs_weight,packaging," +
-            "carton_gross_weight,hsn,num_pcs)values(?1,?2,?3,?4,?5,?6,?7)", nativeQuery = true)
+            "carton_gross_weight,hsn,num_pcs,user_name)values(?1,?2,?3,?4,?5,?6,?7,?8)", nativeQuery = true)
     @Transactional
     int insertData(String barcode,String name_of_item, float per_pcs_weight,int packaging,
-                   float carton_gross_weight,String hsn,int num_pcs);
+                   float carton_gross_weight,String hsn,int num_pcs,String user_name);
 
     @Modifying
     @Query(value = "update production set sku=?1, batch_no=?2 where barcode=?3", nativeQuery = true)
     @Transactional
     int updateProduction(String sku,String batch_no,String barcode);
 
-    @Query("select sk from Production sk where barcode=?1 ")
-    List<Production> getBarcodeList(String barcode);
+    @Query("select sk from Production sk where barcode=?1 and user_name=?2 ")
+    List<Production> getBarcodeList(String barcode,String user_name);
 
 
 }

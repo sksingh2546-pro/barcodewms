@@ -15,7 +15,7 @@ public interface OutRepo extends CrudRepository<Out,Integer> {
     List<Out> getOutData();
 
     @Modifying
-    @Query(value = "update sales_no set status=1 where sales_no=?1",nativeQuery = true)
+    @Query(value = "update sales_no set status=1 where sales_no=?1 and user_name=?2",nativeQuery = true)
     @Transactional
-    int updateStatus(String sales_no);
+    int updateStatus(String sales_no,String user_name);
 }

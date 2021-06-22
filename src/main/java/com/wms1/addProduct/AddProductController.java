@@ -29,15 +29,17 @@ public class AddProductController {
     @PostMapping("insertAddProduct")
     public String insertAddProduct(@RequestBody AddProduct addProduct){
         String message="{\"message\":\"UnSuccessful\"}";
+        addProductRepo.deleteAddProductWithZero();
         Date date=new Date();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct>addProductList=addProductRepo.getBarcodeList(addProduct.getBarcode());
+        List<AddProduct>addProductList=addProductRepo.getBarcodeList(addProduct.getBarcode()
+                ,addProduct.getUser_name());
         if(addProductList.size()>0){
             message  = "{\"message\":\"Already Exist\"}";
         }else {
             int insert = addProductRepo.insertData(addProduct.getBarcode(), addProduct.getName_of_item(), addProduct.getNo_of_pcs(),
                     addProduct.getPer_pcs_weight(), addProduct.getPackaging(),  addProduct.getCarton_gross_weight(),
-                    addProduct.getHsn(),sdf.format(date));
+                    addProduct.getHsn(),sdf.format(date),addProduct.getUser_name());
             if (insert > 0) {
                 message ="{\"message\":\"Successful\"}";
             }
@@ -51,6 +53,7 @@ public class AddProductController {
             todayIn.setHsn(addProduct.getHsn());
             todayIn.setDate(sdf.format(date));
             todayIn.setQty(1);
+            todayIn.setUser_name(addProduct.getUser_name());
             todayInRepo.save(todayIn);
         }
         return message;
@@ -58,8 +61,8 @@ public class AddProductController {
 
 
     @GetMapping("getAllList")
-    public Map<String, List<AddProduct>> getBarcode(){
-        List<AddProduct>addProducts= (List<AddProduct>) addProductRepo.findAll();
+    public Map<String, List<AddProduct>> getBarcode(@RequestParam("user_name")String user_name){
+        List<AddProduct>addProducts=addProductRepo.getDataWithUser_name(user_name);
         HashMap<String,List<AddProduct>> hMap=new HashMap<>();
         hMap.put("barcodeList",addProducts);
         return hMap;
@@ -70,12 +73,14 @@ public class AddProductController {
     @PostMapping("updateStockData")
     public String getBarcodeProduct(@RequestBody AddProduct addProduct,@RequestParam("sales_no")String sales_no){
         String message="{\"message\":\"UnSuccessful\"}";
+        addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct>addProducts=addProductRepo.getBarcodeList(addProduct.getBarcode());
+        List<AddProduct>addProducts=addProductRepo.getBarcodeList(addProduct.getBarcode(),
+                addProduct.getUser_name());
         if(addProducts.size()>0){
             int update=addProductRepo.updateProduction(0,
-                    addProduct.getBarcode());
+                    addProduct.getBarcode(),addProduct.getUser_name());
             if(update>0){
                 message="{\"message\":\"Updated\"}";
             }
@@ -90,18 +95,19 @@ public class AddProductController {
             todayOut.setDate(sdf.format(date));
             todayOut.setSales_no(sales_no);
             todayOut.setQty(1);
+            todayOut.setUser_name(addProduct.getUser_name());
             todayOutRepo.save(todayOut);
         }
         return message;
     }
 
     @GetMapping("getNameOfItem")
-    public Map<String, List<AddProductModel>>getSUmOfQuantity(){
-        Set<String> addProductModels=addProductRepo.getNameOfItem();
+    public Map<String, List<AddProductModel>>getSUmOfQuantity(@RequestParam("user_name")String user_name){
+        Set<String> addProductModels=addProductRepo.getNameOfItem(user_name);
         List<AddProductModel>addProductModels1=new ArrayList<>();
         for(String nameOfProduct:addProductModels){
-            int qty=addProductRepo.sumOfQuantity(nameOfProduct);
-            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct);
+            int qty=addProductRepo.sumOfQuantity(nameOfProduct,user_name);
+            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
             if(addProduct.size()>0){
             AddProductModel addProductModel=new AddProductModel(addProduct.get(0).getName_of_item(),addProduct.get(0).getNo_of_pcs()
             ,addProduct.get(0).getPer_pcs_weight(),addProduct.get(0).getPackaging(),
@@ -116,7 +122,7 @@ public class AddProductController {
     }
 
     @GetMapping("getTotalInTotalOut")
-    public Map<String,List<Map<String,Integer>>>getTotalInOut() {
+    public Map<String,List<Map<String,Integer>>>getTotalInOut(@RequestParam("user_name")String user_name) {
         int todayIn=0,totalOut=0,totalIn=0,todayOut=0;
         List<Map<String, Integer>> mainList = new ArrayList<>();
         Map<String, Integer> addCount = new HashMap<>();
@@ -126,19 +132,19 @@ public class AddProductController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         addCount.put("", totalIn);
          try {
-             totalIn=addProductRepo.sumOfQuantity();
+             totalIn=addProductRepo.sumOfQuantity1(user_name);
          }catch (Exception e){
              totalIn=0;
          }
 
           try {
-              totalOut = todayOutRepo.sumOfQuantity();
+              totalOut = todayOutRepo.sumOfQuantity1(user_name);
          }catch (Exception e){
              totalOut=0;
          }
 
           try {
-             todayIn=todayInRepo.sumOfQuantity(sdf.format(date));
+             todayIn=todayInRepo.sumOfQuantity(sdf.format(date),user_name);
          }catch (Exception e){
              todayIn=0;
          }
@@ -163,12 +169,12 @@ public class AddProductController {
     }
 
     @GetMapping("generateExcelStock")
-    public void generateExcelStock(HttpServletResponse response) throws IOException {
-        Set<String> addProductModels = addProductRepo.getNameOfItem();
+    public void generateExcelStock(HttpServletResponse response,@RequestParam("user_name")String user_name) throws IOException {
+        Set<String> addProductModels = addProductRepo.getNameOfItem(user_name);
         List<AddProductModel> addProductModels1 = new ArrayList<>();
         for (String nameOfProduct : addProductModels) {
-            int qty = addProductRepo.sumOfQuantity(nameOfProduct);
-            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct);
+            int qty = addProductRepo.sumOfQuantity(nameOfProduct,user_name);
+            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
             if (addProduct.size() > 0) {
                 AddProductModel addProductModel = new AddProductModel(addProduct.get(0).getName_of_item(), addProduct.get(0).getNo_of_pcs()
                         , addProduct.get(0).getPer_pcs_weight(), addProduct.get(0).getPackaging(),
@@ -233,6 +239,7 @@ public class AddProductController {
         Cell cell4 = row0.createCell(4);
         Cell cell5 = row0.createCell(5);
         Cell cell6 = row0.createCell(6);
+        Cell cell7 = row0.createCell(7);
 
 
         cell0.setCellStyle(style0);
@@ -242,14 +249,16 @@ public class AddProductController {
         cell4.setCellStyle(style0);
         cell5.setCellStyle(style0);
         cell6.setCellStyle(style0);
+        cell7.setCellStyle(style0);
 
         cell0.setCellValue("SL NO");
        cell1.setCellValue("NAME OF ITEM");
         cell2.setCellValue("NOM OF PCS");
         cell3.setCellValue("PER PCS WEIGHT ");
         cell4.setCellValue("PACKAGING");
-        cell5.setCellValue("CARTOON GROSS WEIGHT");
+        cell5.setCellValue("CARTON GROSS WEIGHT");
         cell6.setCellValue("HSN");
+        cell7.setCellValue("QTY");
         int rowCount = 1;
 
         for (AddProductModel addProductModel : addProductModels1) {
@@ -261,6 +270,7 @@ public class AddProductController {
             Cell packaging = row1.createCell(4);
             Cell cartoonGrossWeight = row1.createCell(5);
             Cell hsn = row1.createCell(6);
+            Cell qty = row1.createCell(7);
 
 
             slNo.setCellStyle(style1);
@@ -270,6 +280,7 @@ public class AddProductController {
             cartoonGrossWeight.setCellStyle(style1);
             perPcsWeight.setCellStyle(style1);
             hsn.setCellStyle(style1);
+            qty.setCellStyle(style1);
 
             slNo.setCellValue(rowCount - 1);
             nameOfItem.setCellValue(addProductModel.getName_of_item());
@@ -278,6 +289,7 @@ public class AddProductController {
             packaging.setCellValue(addProductModel.getPackaging());
             cartoonGrossWeight.setCellValue(addProductModel.getCarton_gross_weight());
             hsn.setCellValue(addProductModel.getHsn());
+            qty.setCellValue(addProductModel.getQty());
         }
         response.setHeader("content-disposition", "attachment;filename=Production Report_"  + ".xls");
         workbook.write(response.getOutputStream());
@@ -288,14 +300,16 @@ public class AddProductController {
 
 
     @GetMapping("getXmlModelData")
-    public Map<String, List<TellyModel>>getXmlData(){
-        Set<String> xmlModels=addProductRepo.getNameOfItem();
+    public Map<String, List<TellyModel>>getXmlData(@RequestParam("user_name")String user_name){
+        Set<String> xmlModels=addProductRepo.getNameOfItem(user_name);
         List<TellyModel>xmlModels1=new ArrayList<>();
         for(String nameOfProduct:xmlModels){
-            int noOfPcs=addProductRepo.sumOfQuantity(nameOfProduct);
-            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct);
+            int qty=addProductRepo.sumOfQuantity(nameOfProduct,user_name);
+            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
             if(addProduct.size()>0){
-                TellyModel tellyModel=new TellyModel(addProduct.get(0).getName_of_item(),noOfPcs);
+                TellyModel tellyModel=new TellyModel(addProduct.get(0).getName_of_item(),
+                        addProduct.get(0).getNo_of_pcs(),qty
+                ,addProduct.get(0).getUser_name());
 
                 xmlModels1.add(tellyModel);
             }
@@ -309,17 +323,19 @@ public class AddProductController {
 
 
     @GetMapping("getProductWithBarcode")
-    public Map<String,List<AddProduct>>getProductWithBarcode(@RequestParam("barcode")String barcode){
-        List<AddProduct>addProductList=addProductRepo.getBarcodeList(barcode);
+    public Map<String,List<AddProduct>>getProductWithBarcode(@RequestParam("barcode")String barcode,
+                                                             @RequestParam("user_name") String user_name){
+        addProductRepo.deleteAddProductWithZero();
+        List<AddProduct>addProductList=addProductRepo.getBarcodeList(barcode,user_name);
         HashMap<String,List<AddProduct>>hMap=new HashMap<>();
         hMap.put("data",addProductList);
         return hMap;
     }
 
    @GetMapping("/getExpireList")
-    public Map<String,List<AddProduct>> getExpireList(){
+    public Map<String,List<AddProduct>> getExpireList(@RequestParam("user_name") String user_name){
 
-        List<AddProduct> getExpireList=addProductRepo.getExpireList();
+        List<AddProduct> getExpireList=addProductRepo.getExpireList(user_name);
         Map<String,List<AddProduct>> hMap=new HashMap<>();
         hMap.put("expire",getExpireList);
 

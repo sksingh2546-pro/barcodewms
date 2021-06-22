@@ -28,13 +28,15 @@ public class ProductionController{
         String message = "{\"message\":\"UnSuccessful\"}";
 
         for (Production production : modelBarcode.getBarcode_data()) {
-            List<Production> productionList = productionRepo.getBarcodeList(production.getBarcode());
+            System.out.println(modelBarcode.getUser_name());
+            List<Production> productionList = productionRepo.getBarcodeList(production.getBarcode(),
+                    modelBarcode.getUser_name());
             if (productionList.size() > 0) {
                 message ="{\"message\":\"Already Exist\"}";
             } else {
                 productionRepo.insertData(production.getBarcode(), production.getName_of_item(), production.getPer_pcs_weight(),
                         production.getPackaging(), production.getCarton_gross_weight(),
-                        production.getHsn(),production.getNum_pcs());
+                        production.getHsn(),production.getNum_pcs(),modelBarcode.getUser_name());
 
                 message ="{\"message\":\"Successful\"}";
             }
@@ -43,8 +45,9 @@ public class ProductionController{
     }
 
     @GetMapping("getProductBarcodeList")
-    public Map<String,List<Production>>getProductBarcode(@RequestParam("barcode")String barcode){
-        List<Production>addProducts=productionRepo.getBarcodeList(barcode);
+    public Map<String,List<Production>>getProductBarcode(@RequestParam("barcode")String barcode,
+                                                         @RequestParam("user_name") String user_name){
+        List<Production>addProducts=productionRepo.getBarcodeList(barcode,user_name);
         HashMap<String,List<Production>>hMap=new HashMap<>();
         hMap.put("productDetails",addProducts);
         return hMap;

@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
-public class ExpiryController {
+public class ExpiryControllerWare2 {
      @Autowired
      AddProductRepo addProductRepo;
 
-    public void getExpiredData() throws ParseException {
+    public void getExpiredDataWare2() throws ParseException {
         Date date =new Date();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct>addProductList= (List<AddProduct>) addProductRepo.getDataWithUser_name("warehouse1");
+        List<AddProduct>addProductList= (List<AddProduct>) addProductRepo.getDataWithUser_name("warehouse2");
 
         for(AddProduct addProduct:addProductList) {
 
@@ -29,7 +30,7 @@ public class ExpiryController {
             System.out.println("Number of Days between dates: " + daysBetween);
             //temp.add(daysBetween);
             if (daysBetween > 120) {
-                addProductRepo.updateProductStatus(addProduct.getBarcode(),"warehouse1");
+                addProductRepo.updateProductStatus(addProduct.getBarcode(),"warehouse2");
                 }
 
         }

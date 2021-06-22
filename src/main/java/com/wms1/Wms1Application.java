@@ -1,6 +1,7 @@
 package com.wms1;
 
 import com.wms1.addProduct.ExpiryController;
+import com.wms1.addProduct.ExpiryControllerWare2;
 import com.wms1.login.LoginInsertController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +24,11 @@ public class Wms1Application {
 	@Bean(initMethod = "getExpiredData")
 	public ExpiryController getExpiredData() {
 		return new ExpiryController();
+	}
+
+	@Bean(initMethod = "getExpiredDataWare2")
+	public ExpiryControllerWare2 getExpiredDataWare2() {
+		return new ExpiryControllerWare2();
 	}
 
 

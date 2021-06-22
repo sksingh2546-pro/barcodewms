@@ -26,7 +26,7 @@
 <nav style="border-bottom:1px solid #333 ;">
     <h6 class="float-left">WMS</h6>
     <button class="btn float-right my-1 mr-3" style="color: #fff;border-radius:20px;font-family: Calibri;"
-            onclick="location.href='/'"
+            onclick="logout()"
     >
         <b>Logout<i class="fas fa-sign-out-alt ml-2"></i></b>
     </button>
@@ -46,6 +46,12 @@
             <a href="excelImport">
                 <i class="fas fa-file-excel mr-2"></i>
                 <span>Upload Product</span>
+            </a>
+        </li>
+        <li class>
+            <a href="totalSku">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Sku List</span>
             </a>
         </li>
         <li class>
@@ -119,8 +125,9 @@
                         <th>No.Of Pcs</th>
                         <th>Per Pcs Weight</th>
                         <th>Packaging</th>
-                        <th>Cartoon Gross Weight</th>
+                        <th>Carton Gross Weight</th>
                         <th>Hsn</th>
+                        <th>Qty</th>
                     </tr>
                     </thead>
                     <tbody id="todayStockTable">
@@ -134,9 +141,13 @@
         <img src="watermark.png">
     </div>
 </div>
-<script src="script.js"></script>
 <!--<script src="api.js"></script>-->
-
+<script>
+if(localStorage.getItem("user_name")==null){
+window.location.href="/";
+}
+</script>
+<script  src="logout.js"></script>
 <script src="totalStock.js"></script>
 <script type="text/javascript" src="libs/toastify.js"></script>
 </body>

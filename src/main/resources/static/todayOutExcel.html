@@ -45,7 +45,7 @@
 <nav style="border-bottom:1px solid #333 ;" width="100%" id="nav">
     <h6 class="float-left">WMS</h6>
     <button class="btn float-right my-1 mr-3" style="color: #fff;border-radius:20px;font-family: Calibri;"
-            onclick="location.href='/'"
+            onclick="logout()"
     >
         <b>Logout<i class="fas fa-sign-out-alt ml-2"></i></b>
     </button>
@@ -66,6 +66,12 @@
             <a href="excelImport">
                 <i class="fas fa-file-excel mr-2"></i>
                 <span>Upload Product</span>
+            </a>
+        </li>
+        <li class>
+            <a href="totalSku">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Sku List</span>
             </a>
         </li>
         <li class>
@@ -138,12 +144,12 @@
                     <div class="file-upload pb-5 "align="center">
                         <div>
                             <div>
-                                <input placeholder="Select From" class="field" onchange="tableList()" type="text" onfocus="(this.type='date')" id="date" >
+                                <input placeholder="Select From" class="field"  type="text" onfocus="(this.type='date')" id="date" >
                                 <!--<input type="text" id="scanBarcode" oninput="ScanBarcode()"  placeholder="Scan Product Code" value="" class="field" autofocus>-->
                             </div>
                             <br>
                             <div>
-                                <input placeholder="Select to" class="field" onchange="tableList()" type="text" onfocus="(this.type='date')" id="to" >
+                                <input placeholder="Select to" class="field"  type="text" onfocus="(this.type='date')" id="to" >
                                 <!--<input type="text" id="scanBarcode" oninput="ScanBarcode()"  placeholder="Scan Product Code" value="" class="field" autofocus>-->
                             </div>
                             <!--
@@ -157,7 +163,7 @@
                     </div>
 
                     <div class="row text-center py-2">
-                        <button class="btn bg-theme text-light mx-auto" style="background-color:black;border-color:blue; text-align:center " onclick="getTodayOutReport()">Download</button>
+                        <button class="btn bg-theme text-light mx-auto" style="background-color:black;border-color:blue; text-align:center " onclick="downloadExcel()">Download</button>
                     </div>
 
                 </div>
@@ -205,7 +211,7 @@
 </div>
 <script type="text/javascript" src="libs/toastify.js"></script>
 <!--<script src="stockManagement.js"></script>-->
-
+<script  src="logout.js"></script>
 <script>
  document.styleSheets[4].disabled = true;
 function getFile() {
@@ -219,10 +225,15 @@ function sub(obj) {
 }
 
 function downloadExcel(){
-window.location.href="/api/getTodayInExcelReport?date="+document.getElementById("date").value+"&to="+document.getElementById("to").value;
+window.location.href="/api/getTodayOutReport?date="+document.getElementById("date").value+"&to="+document.getElementById("to").value+"&user_name="+localStorage.getItem("user_name");
 }
 </script>
 <script src="excelImport.js"></script>
+<script>
+    if(localStorage.getItem("user_name")==null){
+window.location.href="/";
+}
+</script>
 </body>
 
 </html>

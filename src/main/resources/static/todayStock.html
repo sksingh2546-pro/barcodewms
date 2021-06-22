@@ -28,7 +28,7 @@
 <nav style="border-bottom:1px solid #333 ;" width="100%" id="nav">
     <h6 class="float-left">WMS</h6>
     <button class="btn float-right my-1 mr-3" style="color: #fff;border-radius:20px;font-family: Calibri;"
-            onclick="location.href='/'"
+            onclick="logout()"
     >
         <b>Logout<i class="fas fa-sign-out-alt ml-2"></i></b>
     </button>
@@ -48,6 +48,12 @@
             <a href="excelImport">
                 <i class="fas fa-file-excel mr-2"></i>
                 <span>Upload Product</span>
+            </a>
+        </li>
+        <li class>
+            <a href="totalSku">
+                <i class="fas fa-list-ul mr-2"></i>
+                <span>Sku List</span>
             </a>
         </li>
         <li class>
@@ -154,8 +160,9 @@
                         <th class="text-center" >No Of Pcs</th>
                         <th class="text-center" >Per Pcs Weight</th>
                         <th class="text-center" >Packaging</th>
-                        <th class="text-center" >Cartoon Gross Weight</th>
+                        <th class="text-center" >Carton Gross Weight</th>
                         <th class="text-center" >Hsn</th>
+                        <th class="text-center" >Qty</th>
                     </tr>
                     </thead>
                     <tbody id="productTable">
@@ -218,10 +225,12 @@
 <script type="text/javascript" src="libs/toastify.js"></script>
 <!--<script src="stockManagement.js"></script>-->
 <script src="todayStock.js"></script>
-
+<script  src="logout.js"></script>
 <script>
  document.styleSheets[4].disabled = true;
-
+if(localStorage.getItem("user_name")==null){
+window.location.href="/";
+}
 </script>
 </body>
 

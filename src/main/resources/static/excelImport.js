@@ -15,6 +15,7 @@
 		else{
         var formData = new FormData();
         formData.append("file", file[0]);
+        formData.append("user_name",localStorage.getItem("user_name"));
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/api/uploadExcel",true);
@@ -26,7 +27,7 @@
                    var result = JSON.parse(xhr.responseText);
                    console.log(result);
                    if(result.message= "Successful") {
-                    Toastify({
+                                    Toastify({
                                               text: "File Upload Successfully ",
                                               duration: 3000,
                                               gravity: "top",
@@ -35,13 +36,11 @@
                                               close: true
                                           }).showToast();
 
-                      /* alert("File Uploaded Successfully");*/
-                     /* window.location.reload();*/
-document.getElementById("upfile").value="";
-document.getElementById("yourBtn").innerHTML="Click To Upload A File";
+                            document.getElementById("upfile").value="";
+                            document.getElementById("yourBtn").innerHTML="Click To Upload A File";
 
-                   } else {
-                    Toastify({
+                            } else {
+                                         Toastify({
                                               text: "File Already Uploaded ",
                                               duration: 3000,
                                               gravity: "top",
@@ -49,9 +48,8 @@ document.getElementById("yourBtn").innerHTML="Click To Upload A File";
                                               backgroundColor: "#01cf68",
                                               close: true
                                           }).showToast();
-                  // alert("File already Uploaded");
-                  /* window.location.reload();*/
-                  document.getElementById("upfile").value="";
+
+            document.getElementById("upfile").value="";
             document.getElementById("yourBtn").innerHTML="Click To Upload A File";
 
                               }

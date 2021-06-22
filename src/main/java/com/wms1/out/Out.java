@@ -10,6 +10,8 @@ public class Out {
     private int id;
     private String sales_no;
     private int status;
+    private String user_name;
+
 
     public int getId() {
         return id;
@@ -33,5 +35,13 @@ public class Out {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 }

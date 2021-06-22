@@ -12,29 +12,39 @@ import java.util.Set;
 public interface TodayOutRepo extends CrudRepository<TodayOut,Long> {
 
 
-    @Query("select sum(sk.qty) from TodayOut sk where name_of_item=?1 and date between ?2 and ?3 ")
-    int sumOfQuantity1(String name_of_item,String from ,String to);
+    @Query("select sum(sk.qty) from TodayOut sk where name_of_item=?1 and date between ?2 and ?3 and user_name=?4")
+    int sumOfQuantity1(String name_of_item,String from ,String to,String user_name);
 
- @Query("select sum(sk.qty) from TodayOut sk where name_of_item=?1 and date=?2")
-    int sumOfQuantity(String name_of_item,String from );
+ @Query("select sum(sk.qty) from TodayOut sk where name_of_item=?1 and user_name=?2 and sales_no=?3")
+ int sumOfQuantity(String name_of_item,String user_name,String sales_no );
 
-    @Query("select sk.name_of_item from TodayOut sk where date between ?1 and ?2 ")
-    Set<String> getNameOfItem1(String date,String to);
+ @Query("select sum(sk.qty) from TodayOut sk where name_of_item=?1 and user_name=?2 and date=?3")
+ int sumOfQuantity1(String name_of_item,String user_name,String date );
 
-  @Query("select sk.name_of_item from TodayOut sk where date=?1")
-    Set<String> getNameOfItem(String date);
+    @Query("select sk.name_of_item from TodayOut sk where date between ?1 and ?2 and user_name=?3")
+    Set<String> getNameOfItem1(String date,String to, String user_name);
 
-
-    @Query("select sk from TodayOut sk where name_of_item=?1 and date between ?2 and ?3")
-    List<TodayOut> getDataWithNameOfItem(String name_of_item,String date,String to);
-
-    @Query("select sk from TodayOut sk where name_of_item=?1 and date=?2")
-    List<TodayOut> getDataWithNameOfItem(String name_of_item,String date);
+  @Query("select sk.name_of_item from TodayOut sk where user_name=?1 and sales_no=?2")
+    Set<String> getNameOfItem(String user_name,String sales_no);
 
 
+  @Query("select sk.name_of_item from TodayOut sk where user_name=?1 and date=?2")
+    Set<String> getNameOfItem1(String user_name,String date);
 
-    @Query("select sum(sk.qty) from TodayOut sk ")
-    int sumOfQuantity();
+
+    @Query("select sk from TodayOut sk where name_of_item=?1 and date between ?2 and ?3 and user_name=?4")
+    List<TodayOut> getDataWithNameOfItem(String name_of_item,String date,String to,String user_name);
+
+    @Query("select sk from TodayOut sk where name_of_item=?1 and user_name=?2 and sales_no=?3")
+    List<TodayOut> getDataWithNameOfItem(String name_of_item,String user_name,String sales_no);
+
+ @Query("select sk from TodayOut sk where name_of_item=?1 and user_name=?2 and date=?3")
+    List<TodayOut> getDataWithNameOfItem1(String name_of_item,String user_name,String date);
+
+
+
+    @Query("select sum(sk.qty) from TodayOut sk where user_name=?1")
+    int sumOfQuantity1(String user_name);
 
 
     @Query("select sum(sk.qty) from TodayOut sk where date=?1")

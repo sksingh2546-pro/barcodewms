@@ -15,7 +15,7 @@ function getDashboardData() {
 
             }}
             }
-            xhttp1.open("GET", "/api/getTotalInTotalOut", true);
+            xhttp1.open("GET", "/api/getTotalInTotalOut?user_name="+localStorage.getItem("user_name"), true);
 
                 xhttp1.send();
             }
@@ -45,7 +45,7 @@ function getExpireData() {
 
             }}
             }
-            xhttp1.open("GET", "/api/getExpireList", true);
+            xhttp1.open("GET", "/api/getExpireList?user_name="+localStorage.getItem("user_name"), true);
 
                 xhttp1.send();
             }

@@ -24,12 +24,13 @@ public class TodayInController {
     TodayInRepo todayInRepo;
 
     @GetMapping("getTodayInNameOfItem")
-    public Map<String, List<AddProductModel>>getSUmOfQuantity(@RequestParam("date")String date){
+    public Map<String, List<AddProductModel>>getSUmOfQuantity(@RequestParam("date")String date,@RequestParam("user_name")
+                                                              String user_name){
 
-        Set<String> addProductModels=todayInRepo.getNameOfItem(date);
+        Set<String> addProductModels=todayInRepo.getNameOfItem1(date,user_name);
         List<AddProductModel>addProductModels1=new ArrayList<>();
         for(String nameOfProduct:addProductModels){
-            int qty=todayInRepo.sumOfQuantity(nameOfProduct,date);
+            int qty=todayInRepo.sumOfQuantity1(nameOfProduct,date,user_name);
             List<TodayIn> addProduct=todayInRepo.getDataWithNameOfItem(nameOfProduct,date);
             if(addProduct.size()>0){
                AddProductModel addProductModel=new AddProductModel(addProduct.get(0).getName_of_item(),
@@ -47,9 +48,11 @@ public class TodayInController {
 
 
     @GetMapping("getTodayInExcelReport")
-    public void getSUmOfQuantity(HttpServletResponse response,@RequestParam("date")String date, @RequestParam("to")String to)throws IOException {
+    public void getSUmOfQuantity(HttpServletResponse response,@RequestParam("date")String date,
+                                 @RequestParam("to")String to
+                                 ,@RequestParam("user_name") String user_name)throws IOException {
 
-        Set<String> addProductModels=todayInRepo.getNameOfItem(date,to);
+        Set<String> addProductModels=todayInRepo.getNameOfItem(date,to,user_name);
         List<AddProductModel>addProductModels1=new ArrayList<>();
         for(String nameOfProduct:addProductModels){
             int qty=todayInRepo.sumOfQuantity(nameOfProduct,date,to);
@@ -119,6 +122,7 @@ public class TodayInController {
         Cell cell4 = row0.createCell(4);
         Cell cell5 = row0.createCell(5);
         Cell cell6 = row0.createCell(6);
+        Cell cell7 = row0.createCell(7);
        // Cell cell7 = row0.createCell(7);
 
 
@@ -130,6 +134,7 @@ public class TodayInController {
         cell4.setCellStyle(style0);
         cell5.setCellStyle(style0);
         cell6.setCellStyle(style0);
+        cell7.setCellStyle(style0);
         //cell7.setCellStyle(style0);
 
 
@@ -139,8 +144,9 @@ public class TodayInController {
         cell2.setCellValue("NOM OF PCS");
         cell3.setCellValue("PER PCS WEIGHT ");
         cell4.setCellValue("PACKAGING");
-        cell5.setCellValue("CARTOON GROSS WEIGHT");
+        cell5.setCellValue("CARTON GROSS WEIGHT");
         cell6.setCellValue("HSN");
+        cell7.setCellValue("QTY");
         int rowCount = 1;
 
         for (AddProductModel addProductModel : addProductModels1) {
@@ -153,6 +159,7 @@ public class TodayInController {
             Cell packaging = row1.createCell(4);
             Cell cartoonGrossWeight = row1.createCell(5);
             Cell hsn = row1.createCell(6);
+            Cell qty = row1.createCell(7);
 
 
 
@@ -164,6 +171,7 @@ public class TodayInController {
             cartoonGrossWeight.setCellStyle(style1);
             perPcsWeight.setCellStyle(style1);
             hsn.setCellStyle(style1);
+            qty.setCellStyle(style1);
 
 
             slNo.setCellValue(rowCount - 1);
@@ -173,6 +181,7 @@ public class TodayInController {
             packaging.setCellValue(addProductModel.getPackaging());
             cartoonGrossWeight.setCellValue(addProductModel.getCarton_gross_weight());
             hsn.setCellValue(addProductModel.getHsn());
+            qty.setCellValue(addProductModel.getQty());
         }
         response.setHeader("content-disposition", "attachment;filename=Production Report_"+ date + ".xls");
         workbook.write(response.getOutputStream());
@@ -184,8 +193,9 @@ public class TodayInController {
 
 
     @GetMapping("getTodayInProduct")
-    public Map<String,List<TodayIn>>getTodayInProduct(@RequestParam("date")String date){
-        List<TodayIn>todayIns=todayInRepo.getTodayInProduct(date);
+    public Map<String,List<TodayIn>>getTodayInProduct(@RequestParam("date")String date,
+                                                      @RequestParam("user_name")String user_name){
+        List<TodayIn>todayIns=todayInRepo.getTodayInProduct(date,user_name);
         HashMap<String,List<TodayIn>>hMap=new HashMap<>();
         hMap.put("todayIn",todayIns);
         return  hMap;

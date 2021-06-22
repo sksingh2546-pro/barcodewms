@@ -13,6 +13,9 @@ public class Production {
     private String name_of_item;
     private float per_pcs_weight;
     private int packaging;
+    private String user_name;
+
+
 
     private float carton_gross_weight;
     private String hsn;
@@ -81,6 +84,14 @@ public class Production {
 
     public void setNum_pcs(int num_pcs) {
         this.num_pcs = num_pcs;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 }
 

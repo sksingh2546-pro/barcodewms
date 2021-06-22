@@ -67,5 +67,11 @@ public class ViewController {
         return "todayOutExcel.html";
     }
 
+@RequestMapping(value = {"/totalSku"}, method = {RequestMethod.GET})
+    public String totalSku(Model model) {
+        model.addAttribute("msg", (Object) "Please Enter Your Login Details");
+        return "totalSku.html";
+    }
+
 
 }

@@ -14,10 +14,11 @@ public class TodayIn {
     private float per_pcs_weight;
     private int packaging;
     private int qty;
-
     private float carton_gross_weight;
     private String hsn;
     private String date;
+    private String user_name;
+
 
     public long getId() {
         return id;
@@ -98,5 +99,13 @@ public class TodayIn {
 
     public void setQty(int qty) {
         this.qty = qty;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 }

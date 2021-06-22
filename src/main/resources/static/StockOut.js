@@ -8,9 +8,9 @@ function tableList(date){
 
                var result = JSON.parse(this.responseText);
               document.getElementById("productTable").innerHTML="";
-    if(result.todayIn.length==0){
-    Toastify({
-                           text: "No Data",
+               if(result.todayIn.length==0){
+                       Toastify({
+                           text: "Data Not Found !",
                            duration: 3000,
                            gravity: "top",
                            position: 'right',
@@ -19,7 +19,7 @@ function tableList(date){
                        }).showToast();
 
 
-    }else{
+              }else{
 
                Toastify({
                    text: "Data Fetched Successfully",
@@ -41,11 +41,12 @@ function tableList(date){
                        '<td class="text-center" style="width: 10%;">' + result.todayIn[i].carton_gross_weight + '</td>' +
                        '<td class="text-center" style="width: 10%;">' + result.todayIn[i].hsn + '</td>' +
                        '<td class="text-center" style="width: 10%;">' + result.todayIn[i].sales_no + '</td>' +
+                       '<td class="text-center" style="width: 10%;">' + result.todayIn[i].qty + '</td>' +
                        '</tr>';
                }}
            }
        };
-       xhttp.open("GET", "api/getTodayOutNameOfItem?date="+date, true);
+       xhttp.open("GET", "api/getTodayOutNameOfItem?date="+date+"&user_name="+localStorage.getItem("user_name"), true);
        xhttp.send();
 
    }
