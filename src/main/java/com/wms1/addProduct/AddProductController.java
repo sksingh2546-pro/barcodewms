@@ -1,5 +1,7 @@
 package com.wms1.addProduct;
 
+import com.wms1.cart.ProductionCartRepo;
+import com.wms1.production.ProductionModel;
 import com.wms1.todayIn.TodayIn;
 import com.wms1.todayIn.TodayInRepo;
 import com.wms1.todayOut.TodayOut;
@@ -26,24 +28,27 @@ public class AddProductController {
     TodayOutRepo todayOutRepo;
     @Autowired
     TodayInRepo todayInRepo;
+    @Autowired
+    ProductionCartRepo productionCartRepo;
+
     @PostMapping("insertAddProduct")
-    public String insertAddProduct(@RequestBody AddProduct addProduct){
-        String message="{\"message\":\"UnSuccessful\"}";
+    public String insertAddProduct(@RequestBody AddProduct addProduct) {
+        String message = "{\"message\":\"UnSuccessful\"}";
         addProductRepo.deleteAddProductWithZero();
-        Date date=new Date();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct>addProductList=addProductRepo.getBarcodeList(addProduct.getBarcode()
-                ,addProduct.getUser_name());
-        if(addProductList.size()>0){
-            message  = "{\"message\":\"Already Exist\"}";
-        }else {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct.getBarcode()
+                , addProduct.getUser_name());
+        if (addProductList.size() > 0) {
+            message = "{\"message\":\"Already Exist\"}";
+        } else {
             int insert = addProductRepo.insertData(addProduct.getBarcode(), addProduct.getName_of_item(), addProduct.getNo_of_pcs(),
-                    addProduct.getPer_pcs_weight(), addProduct.getPackaging(),  addProduct.getCarton_gross_weight(),
-                    addProduct.getHsn(),sdf.format(date),addProduct.getUser_name());
+                    addProduct.getPer_pcs_weight(), addProduct.getPackaging(), addProduct.getCarton_gross_weight(),
+                    addProduct.getHsn(), sdf.format(date), addProduct.getUser_name());
             if (insert > 0) {
-                message ="{\"message\":\"Successful\"}";
+                message = "{\"message\":\"Successful\"}";
             }
-            TodayIn todayIn=new TodayIn();
+            TodayIn todayIn = new TodayIn();
             todayIn.setBarcode(addProduct.getBarcode());
             todayIn.setName_of_item(addProduct.getName_of_item());
             todayIn.setNo_of_pcs(addProduct.getNo_of_pcs());
@@ -61,30 +66,29 @@ public class AddProductController {
 
 
     @GetMapping("getAllList")
-    public Map<String, List<AddProduct>> getBarcode(@RequestParam("user_name")String user_name){
-        List<AddProduct>addProducts=addProductRepo.getDataWithUser_name(user_name);
-        HashMap<String,List<AddProduct>> hMap=new HashMap<>();
-        hMap.put("barcodeList",addProducts);
+    public Map<String, List<AddProduct>> getBarcode(@RequestParam("user_name") String user_name) {
+        List<AddProduct> addProducts = addProductRepo.getDataWithUser_name(user_name);
+        HashMap<String, List<AddProduct>> hMap = new HashMap<>();
+        hMap.put("barcodeList", addProducts);
         return hMap;
     }
 
 
-
     @PostMapping("updateStockData")
-    public String getBarcodeProduct(@RequestBody AddProduct addProduct,@RequestParam("sales_no")String sales_no){
-        String message="{\"message\":\"UnSuccessful\"}";
+    public String getBarcodeProduct(@RequestBody AddProduct addProduct, @RequestParam("sales_no") String sales_no) {
+        String message = "{\"message\":\"UnSuccessful\"}";
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct>addProducts=addProductRepo.getBarcodeList(addProduct.getBarcode(),
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getBarcode(),
                 addProduct.getUser_name());
-        if(addProducts.size()>0){
-            int update=addProductRepo.updateProduction(0,
-                    addProduct.getBarcode(),addProduct.getUser_name());
-            if(update>0){
-                message="{\"message\":\"Updated\"}";
+        if (addProducts.size() > 0) {
+            int update = addProductRepo.updateProduction(0,
+                    addProduct.getBarcode(), addProduct.getUser_name());
+            if (update > 0) {
+                message = "{\"message\":\"Updated\"}";
             }
-            TodayOut todayOut=new TodayOut();
+            TodayOut todayOut = new TodayOut();
             todayOut.setBarcode(addProduct.getBarcode());
             todayOut.setName_of_item(addProduct.getName_of_item());
             todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
@@ -102,28 +106,29 @@ public class AddProductController {
     }
 
     @GetMapping("getNameOfItem")
-    public Map<String, List<AddProductModel>>getSUmOfQuantity(@RequestParam("user_name")String user_name){
-        Set<String> addProductModels=addProductRepo.getNameOfItem(user_name);
-        List<AddProductModel>addProductModels1=new ArrayList<>();
-        for(String nameOfProduct:addProductModels){
-            int qty=addProductRepo.sumOfQuantity(nameOfProduct,user_name);
-            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
-            if(addProduct.size()>0){
-            AddProductModel addProductModel=new AddProductModel(addProduct.get(0).getName_of_item(),addProduct.get(0).getNo_of_pcs()
-            ,addProduct.get(0).getPer_pcs_weight(),addProduct.get(0).getPackaging(),
-                    addProduct.get(0).getCarton_gross_weight(),addProduct.get(0).getHsn(),qty,addProduct.get(0).getDate());
-            addProductModels1.add(addProductModel);}
+    public Map<String, List<AddProductModel>> getSUmOfQuantity(@RequestParam("user_name") String user_name) {
+        Set<String> addProductModels = addProductRepo.getNameOfItem(user_name);
+        List<AddProductModel> addProductModels1 = new ArrayList<>();
+        for (String nameOfProduct : addProductModels) {
+            int qty = addProductRepo.sumOfQuantity(nameOfProduct, user_name);
+            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct, user_name);
+            if (addProduct.size() > 0) {
+                AddProductModel addProductModel = new AddProductModel(addProduct.get(0).getName_of_item(), addProduct.get(0).getNo_of_pcs()
+                        , addProduct.get(0).getPer_pcs_weight(), addProduct.get(0).getPackaging(),
+                        addProduct.get(0).getCarton_gross_weight(), addProduct.get(0).getHsn(), qty, addProduct.get(0).getDate());
+                addProductModels1.add(addProductModel);
+            }
         }
-        HashMap<String, List<AddProductModel>> hMap=new HashMap<>();
-        hMap.put("sum",addProductModels1);
+        HashMap<String, List<AddProductModel>> hMap = new HashMap<>();
+        hMap.put("sum", addProductModels1);
         return hMap;
 
 
     }
 
     @GetMapping("getTotalInTotalOut")
-    public Map<String,List<Map<String,Integer>>>getTotalInOut(@RequestParam("user_name")String user_name) {
-        int todayIn=0,totalOut=0,totalIn=0,todayOut=0;
+    public Map<String, List<Map<String, Integer>>> getTotalInOut(@RequestParam("user_name") String user_name) {
+        int todayIn = 0, totalOut = 0, totalIn = 0, todayOut = 0;
         List<Map<String, Integer>> mainList = new ArrayList<>();
         Map<String, Integer> addCount = new HashMap<>();
         addCount.put("TotalOut", totalOut);
@@ -131,29 +136,29 @@ public class AddProductController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         addCount.put("", totalIn);
-         try {
-             totalIn=addProductRepo.sumOfQuantity1(user_name);
-         }catch (Exception e){
-             totalIn=0;
-         }
+        try {
+            totalIn = addProductRepo.sumOfQuantity1(user_name);
+        } catch (Exception e) {
+            totalIn = 0;
+        }
 
-          try {
-              totalOut = todayOutRepo.sumOfQuantity1(user_name);
-         }catch (Exception e){
-             totalOut=0;
-         }
+        try {
+            totalOut = todayOutRepo.sumOfQuantity1(user_name);
+        } catch (Exception e) {
+            totalOut = 0;
+        }
 
-          try {
-             todayIn=todayInRepo.sumOfQuantity(sdf.format(date),user_name);
-         }catch (Exception e){
-             todayIn=0;
-         }
+        try {
+            todayIn = todayInRepo.sumOfQuantity(sdf.format(date), user_name);
+        } catch (Exception e) {
+            todayIn = 0;
+        }
 
-          try {
-              todayOut=todayOutRepo.sumOfQuantity(sdf.format(date));
-         }catch (Exception e){
-              todayOut=0;
-         }
+        try {
+            todayOut = todayOutRepo.sumOfQuantity(sdf.format(date));
+        } catch (Exception e) {
+            todayOut = 0;
+        }
 
         addCount.put("todayOut", todayOut);
         addCount.put("TotalOut", totalOut);
@@ -169,16 +174,16 @@ public class AddProductController {
     }
 
     @GetMapping("generateExcelStock")
-    public void generateExcelStock(HttpServletResponse response,@RequestParam("user_name")String user_name) throws IOException {
+    public void generateExcelStock(HttpServletResponse response, @RequestParam("user_name") String user_name) throws IOException {
         Set<String> addProductModels = addProductRepo.getNameOfItem(user_name);
         List<AddProductModel> addProductModels1 = new ArrayList<>();
         for (String nameOfProduct : addProductModels) {
-            int qty = addProductRepo.sumOfQuantity(nameOfProduct,user_name);
-            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
+            int qty = addProductRepo.sumOfQuantity(nameOfProduct, user_name);
+            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct, user_name);
             if (addProduct.size() > 0) {
                 AddProductModel addProductModel = new AddProductModel(addProduct.get(0).getName_of_item(), addProduct.get(0).getNo_of_pcs()
                         , addProduct.get(0).getPer_pcs_weight(), addProduct.get(0).getPackaging(),
-                        addProduct.get(0).getCarton_gross_weight(),addProduct.get(0).getHsn(), qty,addProduct.get(0).getDate());
+                        addProduct.get(0).getCarton_gross_weight(), addProduct.get(0).getHsn(), qty, addProduct.get(0).getDate());
                 addProductModels1.add(addProductModel);
             }
         }
@@ -197,7 +202,6 @@ public class AddProductController {
 
         style0.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         style0.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
 
 
         style1.setAlignment(HorizontalAlignment.CENTER);
@@ -252,7 +256,7 @@ public class AddProductController {
         cell7.setCellStyle(style0);
 
         cell0.setCellValue("SL NO");
-       cell1.setCellValue("NAME OF ITEM");
+        cell1.setCellValue("NAME OF ITEM");
         cell2.setCellValue("NOM OF PCS");
         cell3.setCellValue("PER PCS WEIGHT ");
         cell4.setCellValue("PACKAGING");
@@ -291,31 +295,30 @@ public class AddProductController {
             hsn.setCellValue(addProductModel.getHsn());
             qty.setCellValue(addProductModel.getQty());
         }
-        response.setHeader("content-disposition", "attachment;filename=Production Report_"  + ".xls");
+        response.setHeader("content-disposition", "attachment;filename=Production Report_" + ".xls");
         workbook.write(response.getOutputStream());
 
 
     }
 
 
-
     @GetMapping("getXmlModelData")
-    public Map<String, List<TellyModel>>getXmlData(@RequestParam("user_name")String user_name){
-        Set<String> xmlModels=addProductRepo.getNameOfItem(user_name);
-        List<TellyModel>xmlModels1=new ArrayList<>();
-        for(String nameOfProduct:xmlModels){
-            int qty=addProductRepo.sumOfQuantity(nameOfProduct,user_name);
-            List<AddProduct> addProduct=addProductRepo.getDataWithNameOfItem(nameOfProduct,user_name);
-            if(addProduct.size()>0){
-                TellyModel tellyModel=new TellyModel(addProduct.get(0).getName_of_item(),
-                        addProduct.get(0).getNo_of_pcs(),qty
-                ,addProduct.get(0).getUser_name());
+    public Map<String, List<TellyModel>> getXmlData(@RequestParam("user_name") String user_name) {
+        Set<String> xmlModels = addProductRepo.getNameOfItem(user_name);
+        List<TellyModel> xmlModels1 = new ArrayList<>();
+        for (String nameOfProduct : xmlModels) {
+            int qty = addProductRepo.sumOfQuantity(nameOfProduct, user_name);
+            List<AddProduct> addProduct = addProductRepo.getDataWithNameOfItem(nameOfProduct, user_name);
+            if (addProduct.size() > 0) {
+                TellyModel tellyModel = new TellyModel(addProduct.get(0).getName_of_item(),
+                        addProduct.get(0).getNo_of_pcs(), qty
+                        , addProduct.get(0).getUser_name());
 
                 xmlModels1.add(tellyModel);
             }
         }
-        HashMap<String, List<TellyModel>> hMap=new HashMap<>();
-        hMap.put("stock",xmlModels1);
+        HashMap<String, List<TellyModel>> hMap = new HashMap<>();
+        hMap.put("stock", xmlModels1);
         return hMap;
 
 
@@ -323,23 +326,62 @@ public class AddProductController {
 
 
     @GetMapping("getProductWithBarcode")
-    public Map<String,List<AddProduct>>getProductWithBarcode(@RequestParam("barcode")String barcode,
-                                                             @RequestParam("user_name") String user_name){
+    public Map<String, List<AddProduct>> getProductWithBarcode(@RequestParam("barcode") String barcode,
+                                                               @RequestParam("user_name") String user_name) {
         addProductRepo.deleteAddProductWithZero();
-        List<AddProduct>addProductList=addProductRepo.getBarcodeList(barcode,user_name);
-        HashMap<String,List<AddProduct>>hMap=new HashMap<>();
-        hMap.put("data",addProductList);
+        List<AddProduct> addProductList = addProductRepo.getBarcodeList(barcode, user_name);
+        HashMap<String, List<AddProduct>> hMap = new HashMap<>();
+        hMap.put("data", addProductList);
         return hMap;
     }
 
-   @GetMapping("/getExpireList")
-    public Map<String,List<AddProduct>> getExpireList(@RequestParam("user_name") String user_name){
+    @GetMapping("/getExpireList")
+    public Map<String, List<AddProduct>> getExpireList(@RequestParam("user_name") String user_name) {
 
-        List<AddProduct> getExpireList=addProductRepo.getExpireList(user_name);
-        Map<String,List<AddProduct>> hMap=new HashMap<>();
-        hMap.put("expire",getExpireList);
+        List<AddProduct> getExpireList = addProductRepo.getExpireList(user_name);
+        Map<String, List<AddProduct>> hMap = new HashMap<>();
+        hMap.put("expire", getExpireList);
 
         return hMap;
-   }
+    }
+
+
+    @PostMapping("/addProductionByList")
+    public String insertProductByList(@RequestBody ProductionModel addProduct) {
+        String message[] = {"{\"message\":\"UnSuccessful\"}"};
+        addProductRepo.deleteAddProductWithZero();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        addProduct.getListProduction().forEach(production -> {
+
+            List<AddProduct> addProductList = addProductRepo.getBarcodeList(production.getBarcode()
+                    , production.getUser_name());
+            if (addProductList.size() > 0) {
+                message[0] = "{\"message\":\"Already Exist\"}";
+            } else {
+                int insert = addProductRepo.insertData(production.getBarcode(), production.getName_of_item(), production.getNum_pcs(),
+                        production.getPer_pcs_weight(), production.getPackaging(), production.getCarton_gross_weight(),
+                        production.getHsn(), sdf.format(date), production.getUser_name());
+                if (insert > 0) {
+                    message[0] = "{\"message\":\"Successful\"}";
+                    int a = productionCartRepo.deleteCartItem(production.getBarcode(), production.getUser_name());
+                }
+                TodayIn todayIn = new TodayIn();
+                todayIn.setBarcode(production.getBarcode());
+                todayIn.setName_of_item(production.getName_of_item());
+                todayIn.setNo_of_pcs(production.getNum_pcs());
+                todayIn.setPer_pcs_weight(production.getPer_pcs_weight());
+                todayIn.setPackaging(production.getPackaging());
+                todayIn.setCarton_gross_weight(production.getCarton_gross_weight());
+                todayIn.setHsn(production.getHsn());
+                todayIn.setDate(sdf.format(date));
+                todayIn.setQty(1);
+                todayIn.setUser_name(production.getUser_name());
+                todayInRepo.save(todayIn);
+            }
+        });
+
+        return message[0];
+    }
 
 }
