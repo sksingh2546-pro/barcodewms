@@ -57,4 +57,11 @@ public interface AddProductRepo extends CrudRepository<AddProduct,Long> {
     @Query(value = "delete from add_product where qty=0", nativeQuery = true)
     @Transactional
     int deleteAddProductWithZero();
+
+    @Modifying
+    @Query(value = "update add_product set no_of_pcs=?1,name_of_item=?2,per_pcs_weight=?3,packaging=?4,carton_gross_weight=?5,hsn=?6 where name_of_item=?7 and user_name=?8", nativeQuery = true)
+    @Transactional
+    int updateAddProduction(int num_pcs,String name_of_itemNew,float per_pcs_weight,int packaging,float carton_gross_weight,String hsn,
+                         String name_of_itemOld,String user_name);
+
 }

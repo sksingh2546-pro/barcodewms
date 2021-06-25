@@ -185,6 +185,16 @@ function onMessageArrived(message) {
                         document.getElementById("sales_no").value = "";
 
                       }
+                       else if(this.responseText == "Already"){
+                               Toastify({
+                                        text: "Sales Number Is Already Exist !! ",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: 'center',
+                                        backgroundColor: "#ff0000",
+                                        close : true
+                                        }).showToast();
+                              }
                       else{
                         Toastify({
                            text: "Server ERROR !! ",

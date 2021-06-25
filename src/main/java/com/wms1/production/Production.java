@@ -14,9 +14,6 @@ public class Production {
     private float per_pcs_weight;
     private int packaging;
     private String user_name;
-
-
-
     private float carton_gross_weight;
     private String hsn;
 

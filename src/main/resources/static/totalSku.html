@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="libs/fontawesome/css/all.min.css" />
     <link rel="stylesheet" type="text/css" href="libs/toastify.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     <style>
         #watermark
 {
@@ -19,6 +26,8 @@
  z-index:99;
  color:white;
 }
+
+
     </style>
 </head>
 
@@ -116,6 +125,9 @@
     <div class="container-fluid">
         <div class="myBox" style="width: auto;">
             <h4 class="mb-3">Total Sku List</h4>
+            <div align="right">
+                <button type="button" class="btn btn-info btn-lg turned-button" data-toggle="modal" data-target="#myModal">Add</button>
+            </div>
             <div class="table-responsive">
                 <table class="myTable">
                     <thead>
@@ -127,6 +139,7 @@
                         <th>Packaging</th>
                         <th>Carton Gross Weight</th>
                         <th>Hsn</th>
+                        <th>Edit</th>
                     </tr>
                     </thead>
                     <tbody id="todayStockTable">
@@ -139,6 +152,48 @@
     <div id="watermark">
         <img src="watermark.png">
     </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+
+                    <div class="form-group">
+                        <label for="name_of_item"> Name Of Item (SKU):</label>
+                        <input type="text" class="form-control" id="name_of_item" name="name" >
+                    </div>
+                    <div class="form-group">
+                        <label for="num_of_pcs"> No Of Pcs:</label>
+                        <input type="number" class="form-control" id="num_of_pcs">
+                    </div>
+                    <div class="form-group">
+                        <label for="pcs_per_weight"> Pcs Per Weight:</label>
+                        <input type="number" class="form-control" id="pcs_per_weight">
+                    </div>
+               <div class="form-group">
+                        <label for="packaging"> Packaging:</label>
+                        <input type="number" class="form-control" id="packaging">
+                    </div>
+               <div class="form-group">
+                        <label for="carton_gross_weight"> Carton Gross Weight:</label>
+                        <input type="number" class="form-control" id="carton_gross_weight">
+                    </div>
+               <div class="form-group">
+                        <label for="pcs_per_weight"> Hsn:</label>
+                        <input type="number" class="form-control" id="hsn">
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-success btn-block" onclick="addSku()">Submit! &rarr;</button>
+                </div>
+                   </div>
+        </div>
+    </div>
+</div>
 </div>
 <!--<script src="api.js"></script>-->
 <script>

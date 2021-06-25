@@ -20,14 +20,7 @@ function getTotalStockManagementData() {
             else{
 
             for (var i = 0; i < result.sum.length; i++) {
-                 Toastify({
-                                            text: "Data Fetched Successfully",
-                                            duration: 3000,
-                                            gravity: "top",
-                                            position: 'right',
-                                            backgroundColor: "#01cf68",
-                                            close: true
-                                        }).showToast();
+
                 document.getElementById("todayStockTable").innerHTML +=
                     "<tr>" +
                     '<td>' + (i + 1) + '</td>' +
@@ -40,6 +33,14 @@ function getTotalStockManagementData() {
                     '<td>' + result.sum[i].qty + '</td>' +
                     '</tr>';
             }
+             Toastify({
+                                                        text: "Data Fetched Successfully",
+                                                        duration: 3000,
+                                                        gravity: "top",
+                                                        position: 'right',
+                                                        backgroundColor: "#01cf68",
+                                                        close: true
+                                                    }).showToast();
         }
         }
     };
