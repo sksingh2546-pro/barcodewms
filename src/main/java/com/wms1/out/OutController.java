@@ -17,9 +17,13 @@ public class OutController {
     @PostMapping("/generateOrder")
     public String generateOrder(@RequestBody Out out)
     {   String message="Unsuccessful";
-        Out out1=outRepo.save(out);
-        if(out1.getId()!=0){
-            message="Successful";
+        if(outRepo.checkOutData(out.getSales_no(),out.getUser_name()).size()>0){
+            message="Already";
+        }else {
+            Out out1 = outRepo.save(out);
+            if (out1.getId() != 0) {
+                message = "Successful";
+            }
         }
         return message;
     }
