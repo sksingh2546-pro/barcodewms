@@ -21,7 +21,7 @@ public class ProductionCart {
     private String user_name;
     private String type;
 
-    public ProductionCart(long id, String barcode, String name_of_item, int no_of_pcs, float per_pcs_weight, int packaging, float carton_gross_weight, String hsn, int qty, String status, String date, String user_name, String type) {
+    public ProductionCart(long id, String barcode, String name_of_item, int no_of_pcs, float per_pcs_weight, int packaging, float carton_gross_weight, String hsn, int qty, String status, String date, String user_name, String type, String sales_no) {
         this.id = id;
         this.barcode = barcode;
         this.name_of_item = name_of_item;
@@ -35,7 +35,18 @@ public class ProductionCart {
         this.date = date;
         this.user_name = user_name;
         this.type = type;
+        this.sales_no = sales_no;
     }
+
+    public String getSales_no() {
+        return sales_no;
+    }
+
+    public void setSales_no(String sales_no) {
+        this.sales_no = sales_no;
+    }
+
+    private String sales_no;
 
     public String getType() {
         return type;
