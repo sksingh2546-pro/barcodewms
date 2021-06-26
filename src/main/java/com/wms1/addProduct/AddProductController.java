@@ -348,7 +348,7 @@ public class AddProductController {
 
     @PostMapping("/addProductionByList")
     public String insertProductByList(@RequestBody ProductionModel addProduct) {
-        String message[] = {"{\"message\":\"UnSuccessful\"}"};
+        String[] message = {"{\"message\":\"UnSuccessful\"}"};
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -358,14 +358,14 @@ public class AddProductController {
                     , production.getUser_name());
             if (addProductList.size() > 0) {
                 message[0] = "{\"message\":\"Already Exist\"}";
-                int a = productionCartRepo.deleteCartItem( production.getUser_name(),production.getBarcode());
+                int a = productionCartRepo.deleteCartItem(production.getUser_name(), production.getBarcode());
             } else {
                 int insert = addProductRepo.insertData(production.getBarcode(), production.getName_of_item(), production.getNum_pcs(),
                         production.getPer_pcs_weight(), production.getPackaging(), production.getCarton_gross_weight(),
                         production.getHsn(), sdf.format(date), production.getUser_name());
                 if (insert > 0) {
                     message[0] = "{\"message\":\"Successful\"}";
-                    int a = productionCartRepo.deleteCartItem( production.getUser_name(),production.getBarcode());
+                    int a = productionCartRepo.deleteCartItem(production.getUser_name(), production.getBarcode());
                 }
                 TodayIn todayIn = new TodayIn();
                 todayIn.setBarcode(production.getBarcode());
@@ -382,6 +382,43 @@ public class AddProductController {
             }
         });
 
+        return message[0];
+    }
+
+    @PostMapping("updateStockDataList")
+    public String updateStockDataList(@RequestBody UpdateStockList updateStockList, @RequestParam("sales_no") String sales_no) {
+        String[] message = {"{\"message\":\"UnSuccessful\"}"};
+        addProductRepo.deleteAddProductWithZero();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        updateStockList.listProduction.forEach(addProduct -> {
+                    List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getBarcode(),
+                            addProduct.getUser_name());
+                    if (addProducts.size() > 0) {
+                        int update = addProductRepo.updateProduction(0,
+                                addProduct.getBarcode(), addProduct.getUser_name());
+                        if (update > 0) {
+                            message[0] = "{\"message\":\"Updated\"}";
+                            int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getBarcode());
+                        }
+                        TodayOut todayOut = new TodayOut();
+                        todayOut.setBarcode(addProduct.getBarcode());
+                        todayOut.setName_of_item(addProduct.getName_of_item());
+                        todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
+                        todayOut.setPer_pcs_weight(addProduct.getPer_pcs_weight());
+                        todayOut.setPackaging(addProduct.getPackaging());
+                        todayOut.setCarton_gross_weight(addProduct.getCarton_gross_weight());
+                        todayOut.setHsn(addProduct.getHsn());
+                        todayOut.setDate(sdf.format(date));
+                        todayOut.setSales_no(sales_no);
+                        todayOut.setQty(1);
+                        todayOut.setUser_name(addProduct.getUser_name());
+                        todayOutRepo.save(todayOut);
+                    } else {
+                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getBarcode());
+                    }
+                }
+        );
         return message[0];
     }
 
