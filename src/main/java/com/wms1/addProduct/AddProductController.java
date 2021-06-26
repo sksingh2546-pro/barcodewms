@@ -358,13 +358,14 @@ public class AddProductController {
                     , production.getUser_name());
             if (addProductList.size() > 0) {
                 message[0] = "{\"message\":\"Already Exist\"}";
+                int a = productionCartRepo.deleteCartItem( production.getUser_name(),production.getBarcode());
             } else {
                 int insert = addProductRepo.insertData(production.getBarcode(), production.getName_of_item(), production.getNum_pcs(),
                         production.getPer_pcs_weight(), production.getPackaging(), production.getCarton_gross_weight(),
                         production.getHsn(), sdf.format(date), production.getUser_name());
                 if (insert > 0) {
                     message[0] = "{\"message\":\"Successful\"}";
-                    int a = productionCartRepo.deleteCartItem(production.getBarcode(), production.getUser_name());
+                    int a = productionCartRepo.deleteCartItem( production.getUser_name(),production.getBarcode());
                 }
                 TodayIn todayIn = new TodayIn();
                 todayIn.setBarcode(production.getBarcode());

@@ -18,15 +18,20 @@ public class ProductionCartController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         productionCart.setDate(sdf.format(date));
-        ProductionCart production = productionCartRepo.save(productionCart);
-        if (production.getId() != 0) {
-            message = "{\"message\":\"Successful\"}";
+        List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getBarcode());
+        if (productionCartList.size() == 0) {
+            ProductionCart production = productionCartRepo.save(productionCart);
+            if (production.getId() != 0) {
+                message = "{\"message\":\"Successful\"}";
+            }
+        } else {
+            message = "{\"message\":\"Already Exist\"}";
         }
         return message;
     }
 
     @GetMapping("/getCartList")
-    public Map<String, List<ProductionCart>> getCartList(@RequestParam("user_name") String username,@RequestParam("type") String type) {
+    public Map<String, List<ProductionCart>> getCartList(@RequestParam("user_name") String username, @RequestParam("type") String type) {
         List<ProductionCart> cartList = productionCartRepo.getCartListByUserName(username, type);
         HashMap<String, List<ProductionCart>> hashMap = new HashMap<>();
         hashMap.put("CartList", cartList);

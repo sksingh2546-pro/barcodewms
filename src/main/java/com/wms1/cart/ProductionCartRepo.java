@@ -13,6 +13,9 @@ public interface ProductionCartRepo extends CrudRepository<ProductionCart, Long>
     @Query("select sk from ProductionCart sk where user_name=?1 and type=?2")
     List<ProductionCart> getCartListByUserName(String user_name, String type);
 
+    @Query("select sk from ProductionCart sk where barcode=?1")
+    List<ProductionCart> getCartListByBarcode(String barcode);
+
     @Modifying
     @Query(value = "delete from production_cart where user_name=?1 and barcode=?2 ", nativeQuery = true)
     @Transactional
