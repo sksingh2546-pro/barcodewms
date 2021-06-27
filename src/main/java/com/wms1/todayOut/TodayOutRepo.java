@@ -35,8 +35,8 @@ public interface TodayOutRepo extends CrudRepository<TodayOut,Long> {
     @Query("select sk from TodayOut sk where name_of_item=?1 and date between ?2 and ?3 and user_name=?4")
     List<TodayOut> getDataWithNameOfItem(String name_of_item,String date,String to,String user_name);
 
-    @Query("select sk from TodayOut sk where name_of_item=?1 and user_name=?2 and sales_no=?3")
-    List<TodayOut> getDataWithNameOfItem(String name_of_item,String user_name,String sales_no);
+    @Query("select sk from TodayOut sk where name_of_item=?1 and user_name=?2 and date=?3")
+    List<TodayOut> getDataWithNameOfItem(String name_of_item,String user_name,String date);
 
  @Query("select sk from TodayOut sk where name_of_item=?1 and user_name=?2 and date=?3")
     List<TodayOut> getDataWithNameOfItem1(String name_of_item,String user_name,String date);

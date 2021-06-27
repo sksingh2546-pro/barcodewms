@@ -195,7 +195,7 @@ public class TodayOutController {
             qty.setCellValue(addProductModel.getQty());
 
         }
-        response.setHeader("content-disposition", "attachment;filename=Production Report_" + date + ".xls");
+        response.setHeader("content-disposition", "attachment;filename=Dispatch Report_" + date + ".xls");
         workbook.write(response.getOutputStream());
 
 
