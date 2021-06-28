@@ -14,7 +14,7 @@ public interface ManageUserRepo extends CrudRepository<ManageUser,Integer> {
     List<ManageUser> checkUser(String userName,String warehouses);
 
     @Modifying
-    @Query(value = "delete from user where user_name=?1 and warehouses=?2")
+    @Query(value = "delete from user where user_name=?1 and warehouses=?2",nativeQuery = true)
     @Transactional
     int logout(String userName,String warehouses);
 
