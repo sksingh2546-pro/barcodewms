@@ -20,7 +20,10 @@ public class ManageUserController {
                 manageUser.getWarehouses());
         boolean check=false;
         if(manageUsers.size()==0){
-            check=true;
+            ManageUser manageUser1=manageUserRepo.save(manageUser);
+            if(manageUser1.getId()>0) {
+                check = true;
+            }
         }
         Map<String, Boolean> hMap=new HashMap<>();
         hMap.put("checkUSer",check);
