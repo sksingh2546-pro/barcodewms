@@ -23,15 +23,26 @@ public class ProductionCartController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         productionCart.setDate(sdf.format(date));
         List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getBarcode());
-        List<AddProduct> addProductList = addProductRepo.getBarcodeList(productionCart.getBarcode()
-                , productionCart.getUser_name());
-        if (productionCartList.size() == 0 && addProductList.size() == 0) {
-            ProductionCart production = productionCartRepo.save(productionCart);
-            if (production.getId() != 0) {
-                message = "{\"message\":\"Successful\"}";
+        if (productionCart.getType().equals("out")) {
+            if (productionCartList.size() == 0) {
+                ProductionCart production = productionCartRepo.save(productionCart);
+                if (production.getId() != 0) {
+                    message = "{\"message\":\"Successful\"}";
+                }
+            } else {
+                message = "{\"message\":\"Already Exist\"}";
             }
         } else {
-            message = "{\"message\":\"Already Exist\"}";
+            List<AddProduct> addProductList = addProductRepo.getBarcodeList(productionCart.getBarcode()
+                    , productionCart.getUser_name());
+            if (productionCartList.size() == 0 && addProductList.size() == 0) {
+                ProductionCart production = productionCartRepo.save(productionCart);
+                if (production.getId() != 0) {
+                    message = "{\"message\":\"Successful\"}";
+                }
+            } else {
+                message = "{\"message\":\"Already Exist\"}";
+            }
         }
         return message;
     }
