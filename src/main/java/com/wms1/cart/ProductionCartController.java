@@ -1,5 +1,7 @@
 package com.wms1.cart;
 
+import com.wms1.addProduct.AddProduct;
+import com.wms1.addProduct.AddProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import java.util.*;
 public class ProductionCartController {
     @Autowired
     ProductionCartRepo productionCartRepo;
+    @Autowired
+    AddProductRepo addProductRepo;
 
     @PostMapping("/addProductionCart")
     public String addCart(@RequestBody ProductionCart productionCart) {
@@ -19,7 +23,9 @@ public class ProductionCartController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         productionCart.setDate(sdf.format(date));
         List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getBarcode());
-        if (productionCartList.size() == 0) {
+        List<AddProduct> addProductList = addProductRepo.getBarcodeList(productionCart.getBarcode()
+                , productionCart.getUser_name());
+        if (productionCartList.size() == 0 && addProductList.size() == 0) {
             ProductionCart production = productionCartRepo.save(productionCart);
             if (production.getId() != 0) {
                 message = "{\"message\":\"Successful\"}";
@@ -31,8 +37,8 @@ public class ProductionCartController {
     }
 
     @GetMapping("/getCartList")
-    public Map<String, List<ProductionCart>> getCartList(@RequestParam("user_name") String username, @RequestParam("type") String type) {
-        List<ProductionCart> cartList = productionCartRepo.getCartListByUserName(username, type);
+    public Map<String, List<ProductionCart>> getCartList(@RequestParam("user_id") String user_id, @RequestParam("type") String type, @RequestParam("user_name") String username) {
+        List<ProductionCart> cartList = productionCartRepo.getCartListByUserName(user_id, type, username);
         HashMap<String, List<ProductionCart>> hashMap = new HashMap<>();
         hashMap.put("CartList", cartList);
         return hashMap;

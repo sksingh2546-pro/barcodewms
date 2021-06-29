@@ -1,17 +1,17 @@
 package com.wms1.addProduct;
 
-import com.wms1.production.Production;
+import com.wms1.cart.ProductionCart;
 
 import java.util.ArrayList;
 
 public class UpdateStockList {
-    public ArrayList<AddProduct> getListProduction() {
+    public ArrayList<ProductionCart> getListProduction() {
         return listProduction;
     }
 
-    public void setListProduction(ArrayList<AddProduct> listProduction) {
+    public void setListProduction(ArrayList<ProductionCart> listProduction) {
         this.listProduction = listProduction;
     }
 
-    ArrayList<AddProduct> listProduction;
+    ArrayList<ProductionCart> listProduction;
 }

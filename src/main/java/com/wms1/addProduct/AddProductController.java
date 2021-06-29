@@ -410,7 +410,7 @@ public class AddProductController {
                         todayOut.setCarton_gross_weight(addProduct.getCarton_gross_weight());
                         todayOut.setHsn(addProduct.getHsn());
                         todayOut.setDate(sdf.format(date));
-                        todayOut.setSales_no(sales_no);
+                        todayOut.setSales_no(addProduct.getSales_no());
                         todayOut.setQty(1);
                         todayOut.setUser_name(addProduct.getUser_name());
                         todayOutRepo.save(todayOut);

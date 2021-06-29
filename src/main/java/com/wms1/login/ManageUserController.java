@@ -15,28 +15,29 @@ public class ManageUserController {
     ManageUserRepo manageUserRepo;
 
     @PostMapping("/manageSession")
-    public Map<String, Boolean> manageSession(@RequestBody ManageUser manageUser){
-        List<ManageUser> manageUsers= manageUserRepo.checkUser(manageUser.getUser_name(),
+    public Map<String, Boolean> manageSession(@RequestBody ManageUser manageUser) {
+        List<ManageUser> manageUsers = manageUserRepo.checkUser(manageUser.getUser_name(),
                 manageUser.getWarehouses());
-        boolean check=false;
-        if(manageUsers.size()==0){
-            check=true;
+        boolean check = false;
+        if (manageUsers.size() == 0) {
+            check = true;
+            manageUserRepo.save(manageUser);
         }
-        Map<String, Boolean> hMap=new HashMap<>();
-        hMap.put("checkUSer",check);
+        Map<String, Boolean> hMap = new HashMap<>();
+        hMap.put("checkUser", check);
         return hMap;
     }
 
-    @GetMapping("logout")
+    @GetMapping("/logout")
     public Map<String, Boolean> logout(@RequestParam("user_name") String user_name
-            ,@RequestParam("warehouses") String warehouses){
-        boolean check=false;
-        int logout= manageUserRepo.logout(user_name,warehouses);
-        if (logout>0){
-            check=true;
+            , @RequestParam("warehouses") String warehouses) {
+        boolean check = false;
+        int logout = manageUserRepo.logout(user_name, warehouses);
+        if (logout > 0) {
+            check = true;
         }
-        Map<String, Boolean> hMap=new HashMap<>();
-        hMap.put("logout",check);
+        Map<String, Boolean> hMap = new HashMap<>();
+        hMap.put("logout", check);
         return hMap;
     }
 }
