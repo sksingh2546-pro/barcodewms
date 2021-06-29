@@ -26,7 +26,7 @@ public class ManageUserController {
             }
         }
         Map<String, Boolean> hMap=new HashMap<>();
-        hMap.put("checkUSer",check);
+        hMap.put("checkUser",check);
         return hMap;
     }
 
