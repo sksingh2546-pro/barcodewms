@@ -1,6 +1,7 @@
 package com.wms1.todayOut;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "today_out")
@@ -115,5 +116,19 @@ public class TodayOut {
 
     public void setUser_name(String user_name) {
         this.user_name = user_name;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TodayOut todayOut = (TodayOut) o;
+        return name_of_item.equals(todayOut.name_of_item) && sales_no.equals(todayOut.sales_no);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name_of_item, sales_no);
     }
 }

@@ -1,8 +1,8 @@
 package com.wms1.todayOut;
 
-import com.wms1.addProduct.AddProductModel;
+
 import com.wms1.addProduct.TellyOutModel;
-import com.wms1.todayIn.TodayIn;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -26,11 +26,13 @@ public class TodayOutController {
     public Map<String, List<OutProductModel>> getSUmOfQuantity(@RequestParam("date") String date,
                                                                @RequestParam("user_name") String user_name) {
 
-        Set<String> addProductModels = todayOutRepo.getNameOfItem1(user_name,date);
+        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(user_name,date);
         List<OutProductModel> addProductModels1 = new ArrayList<>();
-        for (String nameOfProduct : addProductModels) {
-            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct,user_name, date);
-            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct,user_name, date);
+        for (TodayOut nameOfProduct : addProductModels) {
+            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(),user_name, date,
+                    nameOfProduct.getSales_no());
+            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct.getName_of_item(),user_name, date,
+                    nameOfProduct.getSales_no());
             if (addProduct.size() > 0) {
                 OutProductModel outProductModel = new OutProductModel(addProduct.get(0).getName_of_item(),
                         addProduct.get(0).getNo_of_pcs()
@@ -63,11 +65,12 @@ public class TodayOutController {
                                  @RequestParam("user_name") String user_name
     ) throws IOException {
 
-        Set<String> addProductModels = todayOutRepo.getNameOfItem1(date, to,user_name);
+        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(date, to,user_name);
         List<OutProductModel> addProductModels1 = new ArrayList<>();
-        for (String nameOfProduct : addProductModels) {
-            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct, date, to,user_name);
-            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct, date, to,user_name);
+        for (TodayOut nameOfProduct : addProductModels) {
+            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(), date, to,user_name,nameOfProduct.getSales_no());
+            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct.getName_of_item(), date,
+                    to,user_name,nameOfProduct.getSales_no());
             if (addProduct.size() > 0) {
                 OutProductModel outProductModel = new OutProductModel(addProduct.get(0).getName_of_item(),
                         addProduct.get(0).getNo_of_pcs()
