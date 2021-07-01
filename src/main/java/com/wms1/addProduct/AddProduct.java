@@ -8,7 +8,6 @@ public class AddProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String barcode;
     private String name_of_item;
     private int no_of_pcs;
     private float per_pcs_weight;
@@ -28,13 +27,6 @@ public class AddProduct {
         this.id = id;
     }
 
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
 
     public String getName_of_item() {
         return name_of_item;

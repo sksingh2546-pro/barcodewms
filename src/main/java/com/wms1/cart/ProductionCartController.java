@@ -22,7 +22,7 @@ public class ProductionCartController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         productionCart.setDate(sdf.format(date));
-        List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getBarcode());
+        List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getName_of_item());
         if (productionCart.getType().equals("out")) {
             if (productionCartList.size() == 0) {
                 ProductionCart production = productionCartRepo.save(productionCart);

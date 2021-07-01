@@ -37,19 +37,18 @@ public class AddProductController {
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct.getBarcode()
-                , addProduct.getUser_name());
+        List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct.getName_of_item()
+                , addProduct.getUser_name(),sdf.format(date));
         if (addProductList.size() > 0) {
             message = "{\"message\":\"Already Exist\"}";
         } else {
-            int insert = addProductRepo.insertData(addProduct.getBarcode(), addProduct.getName_of_item(), addProduct.getNo_of_pcs(),
+            int insert = addProductRepo.insertData(addProduct.getName_of_item(), addProduct.getNo_of_pcs(),
                     addProduct.getPer_pcs_weight(), addProduct.getPackaging(), addProduct.getCarton_gross_weight(),
-                    addProduct.getHsn(), sdf.format(date), addProduct.getUser_name());
+                    addProduct.getHsn(), sdf.format(date), addProduct.getQty(),addProduct.getUser_name());
             if (insert > 0) {
                 message = "{\"message\":\"Successful\"}";
             }
             TodayIn todayIn = new TodayIn();
-            todayIn.setBarcode(addProduct.getBarcode());
             todayIn.setName_of_item(addProduct.getName_of_item());
             todayIn.setNo_of_pcs(addProduct.getNo_of_pcs());
             todayIn.setPer_pcs_weight(addProduct.getPer_pcs_weight());
@@ -80,16 +79,15 @@ public class AddProductController {
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getBarcode(),
-                addProduct.getUser_name());
+        List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getName_of_item(),
+                addProduct.getUser_name(),sdf.format(date));
         if (addProducts.size() > 0) {
-            int update = addProductRepo.updateProduction(0,
-                    addProduct.getBarcode(), addProduct.getUser_name());
+            int update = addProductRepo.updateProduction(addProducts.get(0).getQty()-addProduct.getQty(),
+                    addProduct.getName_of_item(), addProduct.getUser_name());
             if (update > 0) {
                 message = "{\"message\":\"Updated\"}";
             }
             TodayOut todayOut = new TodayOut();
-            todayOut.setBarcode(addProduct.getBarcode());
             todayOut.setName_of_item(addProduct.getName_of_item());
             todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
             todayOut.setPer_pcs_weight(addProduct.getPer_pcs_weight());
@@ -326,10 +324,10 @@ public class AddProductController {
 
 
     @GetMapping("getProductWithBarcode")
-    public Map<String, List<AddProduct>> getProductWithBarcode(@RequestParam("barcode") String barcode,
+    public Map<String, List<AddProduct>> getProductWithBarcode(@RequestParam("name_of_item") String name_of_item,
                                                                @RequestParam("user_name") String user_name) {
         addProductRepo.deleteAddProductWithZero();
-        List<AddProduct> addProductList = addProductRepo.getBarcodeList(barcode, user_name);
+        List<AddProduct> addProductList = addProductRepo.getBarcodeList(name_of_item, user_name);
         HashMap<String, List<AddProduct>> hMap = new HashMap<>();
         hMap.put("data", addProductList);
         return hMap;
@@ -352,32 +350,35 @@ public class AddProductController {
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        addProduct.getListProduction().forEach(production -> {
+        addProduct.getListProduction().forEach(addProduct1 -> {
 
-            List<AddProduct> addProductList = addProductRepo.getBarcodeList(production.getBarcode()
-                    , production.getUser_name());
+            List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct1.getName_of_item()
+                    , addProduct1.getUser_name(),sdf.format(date));
             if (addProductList.size() > 0) {
-                message[0] = "{\"message\":\"Already Exist\"}";
-                int a = productionCartRepo.deleteCartItem(production.getUser_name(), production.getBarcode());
+                int update = addProductRepo.updateProduction(addProductList.get(0).getQty()+addProduct1.getQty(),
+                        addProduct1.getName_of_item(), addProduct1.getUser_name());
+                if (update > 0) {
+                    message[0] = "{\"message\":\"Updated\"}";
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item());
+                }
             } else {
-                int insert = addProductRepo.insertData(production.getBarcode(), production.getName_of_item(), production.getNum_pcs(),
-                        production.getPer_pcs_weight(), production.getPackaging(), production.getCarton_gross_weight(),
-                        production.getHsn(), sdf.format(date), production.getUser_name());
+                int insert = addProductRepo.insertData( addProduct1.getName_of_item(), addProduct1.getNo_of_pcs(),
+                        addProduct1.getPer_pcs_weight(), addProduct1.getPackaging(), addProduct1.getCarton_gross_weight(),
+                        addProduct1.getHsn(), sdf.format(date), addProduct1.getQty(),addProduct1.getUser_name());
                 if (insert > 0) {
                     message[0] = "{\"message\":\"Successful\"}";
-                    int a = productionCartRepo.deleteCartItem(production.getUser_name(), production.getBarcode());
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item());
                 }
                 TodayIn todayIn = new TodayIn();
-                todayIn.setBarcode(production.getBarcode());
-                todayIn.setName_of_item(production.getName_of_item());
-                todayIn.setNo_of_pcs(production.getNum_pcs());
-                todayIn.setPer_pcs_weight(production.getPer_pcs_weight());
-                todayIn.setPackaging(production.getPackaging());
-                todayIn.setCarton_gross_weight(production.getCarton_gross_weight());
-                todayIn.setHsn(production.getHsn());
+                todayIn.setName_of_item(addProduct1.getName_of_item());
+                todayIn.setNo_of_pcs(addProduct1.getNo_of_pcs());
+                todayIn.setPer_pcs_weight(addProduct1.getPer_pcs_weight());
+                todayIn.setPackaging(addProduct1.getPackaging());
+                todayIn.setCarton_gross_weight(addProduct1.getCarton_gross_weight());
+                todayIn.setHsn(addProduct1.getHsn());
                 todayIn.setDate(sdf.format(date));
-                todayIn.setQty(1);
-                todayIn.setUser_name(production.getUser_name());
+                todayIn.setQty(addProduct1.getQty());
+                todayIn.setUser_name(addProduct1.getUser_name());
                 todayInRepo.save(todayIn);
             }
         });
@@ -392,17 +393,16 @@ public class AddProductController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         updateStockList.listProduction.forEach(addProduct -> {
-                    List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getBarcode(),
-                            addProduct.getUser_name());
+                    List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getName_of_item(),
+                            addProduct.getUser_name(),sdf.format(date));
                     if (addProducts.size() > 0) {
-                        int update = addProductRepo.updateProduction(0,
-                                addProduct.getBarcode(), addProduct.getUser_name());
+                        int update = addProductRepo.updateProduction(addProducts.get(0).getQty()+addProduct.getQty(),
+                                addProduct.getName_of_item(), addProduct.getUser_name());
                         if (update > 0) {
                             message[0] = "{\"message\":\"Updated\"}";
                             int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getBarcode());
                         }
                         TodayOut todayOut = new TodayOut();
-                        todayOut.setBarcode(addProduct.getBarcode());
                         todayOut.setName_of_item(addProduct.getName_of_item());
                         todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
                         todayOut.setPer_pcs_weight(addProduct.getPer_pcs_weight());
