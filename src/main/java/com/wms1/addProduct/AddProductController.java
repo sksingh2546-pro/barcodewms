@@ -70,6 +70,21 @@ public class AddProductController {
         return hMap;
     }
 
+    @GetMapping("getQtyByNameOfItem")
+    public Map<String, Integer> getQtyByNameOfItem(@RequestParam("user_name") String user_name,
+                                                  @RequestParam("name_of_item") String name_of_item){
+        int qty=0;
+        try{
+           qty=addProductRepo.getNameOfItem(user_name,name_of_item);
+        }catch (Exception e){
+           qty=0;
+        }
+        Map<String, Integer> hMap=new HashMap<>();
+        hMap.put("qty",qty);
+
+        return hMap;
+    }
+
 
     @PostMapping("updateStockData")
     public String getBarcodeProduct(@RequestBody AddProduct addProduct, @RequestParam("sales_no") String sales_no) {

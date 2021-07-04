@@ -44,6 +44,9 @@ public interface AddProductRepo extends CrudRepository<AddProduct,Long> {
     @Query("select sk.name_of_item from AddProduct sk where user_name=?1")
     Set<String>getNameOfItem(String user_name);
 
+   @Query("select sum(sk.qty) from AddProduct sk where user_name=?1 and name_of_item=?2")
+    int getNameOfItem(String user_name,String name_of_item);
+
     @Query("select sum(sk.qty) from AddProduct sk where name_of_item=?1 and user_name=?2")
     int sumOfQuantity(String name_of_item,String user_name);
 
