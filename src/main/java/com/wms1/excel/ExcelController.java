@@ -127,7 +127,7 @@ public class ExcelController {
         hMap.put("itemDetails",excels);
         return hMap;
     }
-    @GetMapping("getNameItemList")
+    @GetMapping("/getNameItemList")
     public Map<String,Set<String>>getNameItemList(@RequestParam("user_name")String user_name){
         Set<String>temp=new HashSet<>();
         List<Excel>excelList=excelRepo.getNameOfItemList1(user_name);
@@ -140,7 +140,7 @@ public class ExcelController {
         return hMap;
     }
 
-    @GetMapping("getAllData")
+    @GetMapping("/getAllData")
     public Map<String,List<Excel>>getExcel(@RequestParam("user_name") String user_name){
         HashMap<String,List<Excel>>hMap=new HashMap<>();
         hMap.put("product", (List<Excel>) excelRepo.getNameOfItemList1(user_name));

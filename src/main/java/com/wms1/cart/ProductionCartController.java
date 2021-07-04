@@ -1,12 +1,14 @@
 package com.wms1.cart;
 
-import com.wms1.addProduct.AddProduct;
 import com.wms1.addProduct.AddProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +25,21 @@ public class ProductionCartController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         productionCart.setDate(sdf.format(date));
         List<ProductionCart> productionCartList = productionCartRepo.getCartListByBarcode(productionCart.getName_of_item());
-        if (productionCart.getType().equals("out")) {
+
+        if (productionCartList.size() == 0) {
+            ProductionCart production = productionCartRepo.save(productionCart);
+            if (production.getId() != 0) {
+                message = "{\"message\":\"Successful\"}";
+            }
+        } else {
+            int a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
+            if (a != 0) {
+                message = "{\"message\":\"Successful\"}";
+            }
+        }
+
+
+      /*  if (productionCart.getType().equals("out")) {
             if (productionCartList.size() == 0) {
                 ProductionCart production = productionCartRepo.save(productionCart);
                 if (production.getId() != 0) {
@@ -43,7 +59,7 @@ public class ProductionCartController {
             } else {
                 message = "{\"message\":\"Already Exist\"}";
             }
-        }
+        }*/
         return message;
     }
 
