@@ -10,12 +10,10 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,14 +35,14 @@ public class AddProductController {
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct.getName_of_item()
-                , addProduct.getUser_name(),sdf.format(date));
+        List<AddProduct> addProductList = addProductRepo.getProductBySkuNameList(addProduct.getName_of_item()
+                , addProduct.getUser_name(), sdf.format(date));
         if (addProductList.size() > 0) {
             message = "{\"message\":\"Already Exist\"}";
         } else {
             int insert = addProductRepo.insertData(addProduct.getName_of_item(), addProduct.getNo_of_pcs(),
                     addProduct.getPer_pcs_weight(), addProduct.getPackaging(), addProduct.getCarton_gross_weight(),
-                    addProduct.getHsn(), sdf.format(date), addProduct.getQty(),addProduct.getUser_name());
+                    addProduct.getHsn(), sdf.format(date), addProduct.getQty(), addProduct.getUser_name());
             if (insert > 0) {
                 message = "{\"message\":\"Successful\"}";
             }
@@ -79,10 +77,10 @@ public class AddProductController {
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getName_of_item(),
-                addProduct.getUser_name(),sdf.format(date));
+        List<AddProduct> addProducts = addProductRepo.getProductBySkuNameList(addProduct.getName_of_item(),
+                addProduct.getUser_name(), sdf.format(date));
         if (addProducts.size() > 0) {
-            int update = addProductRepo.updateProduction(addProducts.get(0).getQty()-addProduct.getQty(),
+            int update = addProductRepo.updateProduction(addProducts.get(0).getQty() - addProduct.getQty(),
                     addProduct.getName_of_item(), addProduct.getUser_name());
             if (update > 0) {
                 message = "{\"message\":\"Updated\"}";
@@ -327,7 +325,7 @@ public class AddProductController {
     public Map<String, List<AddProduct>> getProductWithBarcode(@RequestParam("name_of_item") String name_of_item,
                                                                @RequestParam("user_name") String user_name) {
         addProductRepo.deleteAddProductWithZero();
-        List<AddProduct> addProductList = addProductRepo.getBarcodeList(name_of_item, user_name);
+        List<AddProduct> addProductList = addProductRepo.getProductBySkuNameList(name_of_item, user_name);
         HashMap<String, List<AddProduct>> hMap = new HashMap<>();
         hMap.put("data", addProductList);
         return hMap;
@@ -345,29 +343,30 @@ public class AddProductController {
 
 
     @PostMapping("/addProductionByList")
-    public String insertProductByList(@RequestBody ProductionModel addProduct) {
+    public String insertProductByList(@RequestBody ProductionModel addProduct, @RequestParam("type") String type,
+                                      @RequestParam("user_id") String user_id) {
         String[] message = {"{\"message\":\"UnSuccessful\"}"};
         addProductRepo.deleteAddProductWithZero();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         addProduct.getListProduction().forEach(addProduct1 -> {
 
-            List<AddProduct> addProductList = addProductRepo.getBarcodeList(addProduct1.getName_of_item()
-                    , addProduct1.getUser_name(),sdf.format(date));
+            List<AddProduct> addProductList = addProductRepo.getProductBySkuNameList(addProduct1.getName_of_item()
+                    , addProduct1.getUser_name(), sdf.format(date));
             if (addProductList.size() > 0) {
-                int update = addProductRepo.updateProduction(addProductList.get(0).getQty()+addProduct1.getQty(),
+                int update = addProductRepo.updateProduction(addProductList.get(0).getQty() + addProduct1.getQty(),
                         addProduct1.getName_of_item(), addProduct1.getUser_name());
                 if (update > 0) {
                     message[0] = "{\"message\":\"Updated\"}";
-                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item());
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id);
                 }
             } else {
-                int insert = addProductRepo.insertData( addProduct1.getName_of_item(), addProduct1.getNo_of_pcs(),
+                int insert = addProductRepo.insertData(addProduct1.getName_of_item(), addProduct1.getNo_of_pcs(),
                         addProduct1.getPer_pcs_weight(), addProduct1.getPackaging(), addProduct1.getCarton_gross_weight(),
-                        addProduct1.getHsn(), sdf.format(date), addProduct1.getQty(),addProduct1.getUser_name());
+                        addProduct1.getHsn(), sdf.format(date), addProduct1.getQty(), addProduct1.getUser_name());
                 if (insert > 0) {
                     message[0] = "{\"message\":\"Successful\"}";
-                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item());
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id);
                 }
                 TodayIn todayIn = new TodayIn();
                 todayIn.setName_of_item(addProduct1.getName_of_item());
@@ -393,29 +392,32 @@ public class AddProductController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         updateStockList.listProduction.forEach(addProduct -> {
-                    List<AddProduct> addProducts = addProductRepo.getBarcodeList(addProduct.getName_of_item(),
-                            addProduct.getUser_name(),sdf.format(date));
+                    List<AddProduct> addProducts = addProductRepo.getProductBySkuNameList(addProduct.getName_of_item(),
+                            addProduct.getUser_name(), sdf.format(date));
                     if (addProducts.size() > 0) {
-                        int update = addProductRepo.updateProduction(addProducts.get(0).getQty()+addProduct.getQty(),
-                                addProduct.getName_of_item(), addProduct.getUser_name());
-                        if (update > 0) {
-                            message[0] = "{\"message\":\"Updated\"}";
-                            int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getBarcode());
+                        if (addProduct.getQty() < addProducts.get(0).getQty()) {
+                            int update = addProductRepo.updateProduction(addProducts.get(0).getQty() - addProduct.getQty(),
+                                    addProduct.getName_of_item(), addProduct.getUser_name());
+                            if (update > 0) {
+                                message[0] = "{\"message\":\"Updated\"}";
+                                int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
+                           int b=a;
+                            }
+                            TodayOut todayOut = new TodayOut();
+                            todayOut.setName_of_item(addProduct.getName_of_item());
+                            todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
+                            todayOut.setPer_pcs_weight(addProduct.getPer_pcs_weight());
+                            todayOut.setPackaging(addProduct.getPackaging());
+                            todayOut.setCarton_gross_weight(addProduct.getCarton_gross_weight());
+                            todayOut.setHsn(addProduct.getHsn());
+                            todayOut.setDate(sdf.format(date));
+                            todayOut.setSales_no(addProduct.getSales_no());
+                            todayOut.setQty(1);
+                            todayOut.setUser_name(addProduct.getUser_name());
+                            todayOutRepo.save(todayOut);
                         }
-                        TodayOut todayOut = new TodayOut();
-                        todayOut.setName_of_item(addProduct.getName_of_item());
-                        todayOut.setNo_of_pcs(addProduct.getNo_of_pcs());
-                        todayOut.setPer_pcs_weight(addProduct.getPer_pcs_weight());
-                        todayOut.setPackaging(addProduct.getPackaging());
-                        todayOut.setCarton_gross_weight(addProduct.getCarton_gross_weight());
-                        todayOut.setHsn(addProduct.getHsn());
-                        todayOut.setDate(sdf.format(date));
-                        todayOut.setSales_no(addProduct.getSales_no());
-                        todayOut.setQty(1);
-                        todayOut.setUser_name(addProduct.getUser_name());
-                        todayOutRepo.save(todayOut);
-                    } else {
-                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getBarcode());
+                    }else {
+                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
                     }
                 }
         );

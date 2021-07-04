@@ -22,10 +22,10 @@ public interface AddProductRepo extends CrudRepository<AddProduct,Long> {
 
 
     @Query("select sk from AddProduct sk where name_of_item=?1 and status='valid' and user_name=?2 and date=?3")
-    List<AddProduct> getBarcodeList(String name_of_item,String user_name,String date);
+    List<AddProduct> getProductBySkuNameList(String name_of_item, String user_name, String date);
 
     @Query("select sk from AddProduct sk where name_of_item=?1 and status='valid' and user_name=?2")
-    List<AddProduct> getBarcodeList(String name_of_item,String user_name);
+    List<AddProduct> getProductBySkuNameList(String name_of_item, String user_name);
 
 
     @Query("select sk from AddProduct sk where status='expire' and user_name=?1")
