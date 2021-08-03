@@ -54,7 +54,7 @@ public class AddProductController {
             todayIn.setCarton_gross_weight(addProduct.getCarton_gross_weight());
             todayIn.setHsn(addProduct.getHsn());
             todayIn.setDate(sdf.format(date));
-            todayIn.setQty(1);
+            todayIn.setQty(addProduct.getQty());
             todayIn.setUser_name(addProduct.getUser_name());
             todayInRepo.save(todayIn);
         }
@@ -109,7 +109,7 @@ public class AddProductController {
             todayOut.setHsn(addProduct.getHsn());
             todayOut.setDate(sdf.format(date));
             todayOut.setSales_no(sales_no);
-            todayOut.setQty(1);
+            todayOut.setQty(addProduct.getQty());
             todayOut.setUser_name(addProduct.getUser_name());
             todayOutRepo.save(todayOut);
         }
@@ -427,7 +427,7 @@ public class AddProductController {
                             todayOut.setHsn(addProduct.getHsn());
                             todayOut.setDate(sdf.format(date));
                             todayOut.setSales_no(addProduct.getSales_no());
-                            todayOut.setQty(1);
+                            todayOut.setQty(addProduct.getQty());
                             todayOut.setUser_name(addProduct.getUser_name());
                             todayOutRepo.save(todayOut);
                         }
