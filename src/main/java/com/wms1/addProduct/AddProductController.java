@@ -36,7 +36,7 @@ public class AddProductController {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<AddProduct> addProductList = addProductRepo.getProductBySkuNameList(addProduct.getName_of_item()
-                , addProduct.getUser_name(), sdf.format(date));
+                , addProduct.getUser_name());
         if (addProductList.size() > 0) {
             message = "{\"message\":\"Already Exist\"}";
         } else {
@@ -367,7 +367,7 @@ public class AddProductController {
         addProduct.getListProduction().forEach(addProduct1 -> {
 
             List<AddProduct> addProductList = addProductRepo.getProductBySkuNameList(addProduct1.getName_of_item()
-                    , addProduct1.getUser_name(), sdf.format(date));
+                    , addProduct1.getUser_name());
             if (addProductList.size() > 0) {
                 int update = addProductRepo.updateProduction(addProductList.get(0).getQty() + addProduct1.getQty(),
                         addProduct1.getName_of_item(), addProduct1.getUser_name());
@@ -408,9 +408,9 @@ public class AddProductController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         updateStockList.listProduction.forEach(addProduct -> {
                     List<AddProduct> addProducts = addProductRepo.getProductBySkuNameList(addProduct.getName_of_item(),
-                            addProduct.getUser_name(), sdf.format(date));
+                            addProduct.getUser_name());
                     if (addProducts.size() > 0) {
-                        if (addProduct.getQty() < addProducts.get(0).getQty()) {
+                        if (addProduct.getQty() <= addProducts.get(0).getQty()) {
                             int update = addProductRepo.updateProduction(addProducts.get(0).getQty() - addProduct.getQty(),
                                     addProduct.getName_of_item(), addProduct.getUser_name());
                             if (update > 0) {
