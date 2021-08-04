@@ -49,4 +49,4 @@ function getExpireData() {
 
                 xhttp1.send();
             }
-window.onload=getExpireData();
+//window.onload=getExpireData();

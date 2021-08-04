@@ -34,6 +34,12 @@ public class OutController {
         hMap.put("salesNo",outRepo.getOutData());
         return  hMap;
     }
+ @GetMapping("/getSalesNoWithUser")
+    public Map<String, List<Out>> getSalesNoWithUser( @RequestParam("user_name")String user_name){
+        Map<String, List<Out>> hMap=new HashMap<>();
+        hMap.put("salesNo",outRepo.getOutData());
+        return  hMap;
+    }
 
     @PostMapping("/updateSalesNo")
     public String updateSalesNo(@RequestParam("sales_no") String sales_no,@RequestParam("user_name")String user_name)

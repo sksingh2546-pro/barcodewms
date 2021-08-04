@@ -73,5 +73,17 @@ public class ViewController {
         return "totalSku.html";
     }
 
+@RequestMapping(value = {"/completeOrder"}, method = {RequestMethod.GET})
+    public String completeOrder(Model model) {
+        model.addAttribute("msg", (Object) "Please Enter Your Login Details");
+        return "completeOrder.html";
+    }
+
+@RequestMapping(value = {"/viewSn"}, method = {RequestMethod.GET})
+    public String viewSn(Model model) {
+        model.addAttribute("msg", (Object) "Please Enter Your Login Details");
+        return "viewSn.html";
+    }
+
 
 }

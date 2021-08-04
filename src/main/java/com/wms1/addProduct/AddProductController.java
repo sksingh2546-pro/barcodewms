@@ -268,7 +268,7 @@ public class AddProductController {
 
         cell0.setCellValue("SL NO");
         cell1.setCellValue("NAME OF ITEM");
-        cell2.setCellValue("NOM OF PCS");
+        cell2.setCellValue("NO. OF PCS");
         cell3.setCellValue("PER PCS WEIGHT ");
         cell4.setCellValue("PACKAGING");
         cell5.setCellValue("CARTON GROSS WEIGHT");
@@ -280,8 +280,8 @@ public class AddProductController {
             Row row1 = sheet1.createRow(rowCount++);
             Cell slNo = row1.createCell(0);
             Cell nameOfItem = row1.createCell(1);
-            Cell perPcsWeight = row1.createCell(2);
-            Cell noOfPcs = row1.createCell(3);
+            Cell perPcsWeight = row1.createCell(3);
+            Cell noOfPcs = row1.createCell(2);
             Cell packaging = row1.createCell(4);
             Cell cartoonGrossWeight = row1.createCell(5);
             Cell hsn = row1.createCell(6);

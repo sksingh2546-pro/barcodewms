@@ -13,6 +13,8 @@ public interface OutRepo extends CrudRepository<Out,Integer> {
 
     @Query("select out from Out out where status=0")
     List<Out> getOutData();
+    @Query("select out from Out out where status=0 and user_name=?1")
+    List<Out> getOutData(String user_name);
 
     @Modifying
     @Query(value = "update sales_no set status=1 where sales_no=?1 and user_name=?2",nativeQuery = true)

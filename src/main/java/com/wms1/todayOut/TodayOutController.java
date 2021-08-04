@@ -155,7 +155,7 @@ public class TodayOutController {
 
         cell0.setCellValue("SL NO");
         cell1.setCellValue("NAME OF ITEM");
-        cell2.setCellValue("NOM OF PCS");
+        cell2.setCellValue("NO. OF PCS");
         cell3.setCellValue("PER PCS WEIGHT ");
         cell4.setCellValue("PACKAGING");
         cell5.setCellValue("CARTON GROSS WEIGHT");
@@ -167,8 +167,8 @@ public class TodayOutController {
             Row row1 = sheet1.createRow(rowCount++);
             Cell slNo = row1.createCell(0);
             Cell nameOfItem = row1.createCell(1);
-            Cell perPcsWeight = row1.createCell(2);
-            Cell noOfPcs = row1.createCell(3);
+            Cell perPcsWeight = row1.createCell(3);
+            Cell noOfPcs = row1.createCell(2);
             Cell packaging = row1.createCell(4);
             Cell cartoonGrossWeight = row1.createCell(5);
             Cell hsn = row1.createCell(6);
@@ -214,7 +214,9 @@ public class TodayOutController {
             List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct, user_name,sales_no);
             if (addProduct.size() > 0) {
                 TellyOutModel tellyOutModel=new TellyOutModel(
-                        nameOfProduct,addProduct.get(0).getNo_of_pcs(),qty,
+                        nameOfProduct,addProduct.get(0).getNo_of_pcs(),qty,addProduct.get(0).getPer_pcs_weight()
+                        ,addProduct.get(0).getCarton_gross_weight(),addProduct.get(0).getCarton_gross_weight(),
+                        addProduct.get(0).getHsn(),
                         user_name,sales_no,addProduct.get(0).getDate());
                 addProductModels1.add(tellyOutModel);
             }

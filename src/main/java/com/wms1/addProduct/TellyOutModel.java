@@ -5,6 +5,10 @@ public class TellyOutModel {
     private String name_of_item;
     private int no_of_pcs;
     private int qty;
+    private float per_pcs_weight;
+    private float packaging;
+    private float carton_weight;
+    private String hsn;
     private String warehouse;
     private String sales_no;
     private String date;
@@ -57,10 +61,46 @@ public class TellyOutModel {
         this.date = date;
     }
 
-    public TellyOutModel(String name_of_item, int no_of_pcs, int qty, String warehouse, String sales_no, String date) {
+    public float getPer_pcs_weight() {
+        return per_pcs_weight;
+    }
+
+    public void setPer_pcs_weight(float per_pcs_weight) {
+        this.per_pcs_weight = per_pcs_weight;
+    }
+
+    public float getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(float packaging) {
+        this.packaging = packaging;
+    }
+
+    public float getCarton_weight() {
+        return carton_weight;
+    }
+
+    public void setCarton_weight(float carton_weight) {
+        this.carton_weight = carton_weight;
+    }
+
+    public String getHsn() {
+        return hsn;
+    }
+
+    public void setHsn(String hsn) {
+        this.hsn = hsn;
+    }
+
+    public TellyOutModel(String name_of_item, int no_of_pcs, int qty, float per_pcs_weight, float packaging, float carton_weight, String hsn, String warehouse, String sales_no, String date) {
         this.name_of_item = name_of_item;
         this.no_of_pcs = no_of_pcs;
         this.qty = qty;
+        this.per_pcs_weight = per_pcs_weight;
+        this.packaging = packaging;
+        this.carton_weight = carton_weight;
+        this.hsn = hsn;
         this.warehouse = warehouse;
         this.sales_no = sales_no;
         this.date = date;
