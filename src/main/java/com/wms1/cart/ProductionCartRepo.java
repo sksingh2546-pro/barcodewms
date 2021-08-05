@@ -13,8 +13,8 @@ public interface ProductionCartRepo extends CrudRepository<ProductionCart, Long>
     @Query("select sk from ProductionCart sk where user_id=?1 and type=?2 and user_name=?3")
     List<ProductionCart> getCartListByUserName(String user_id, String type, String user_name);
 
-    @Query("select sk from ProductionCart sk where name_of_item=?3 and user_name=?2 and type=?1 and sales_no=?4")
-    List<ProductionCart> getCartListByTypeName(String type, String user_name,String name_of_item,String sales_no);
+    @Query("select sk from ProductionCart sk where name_of_item=?3 and user_name=?2 and type=?1 and sales_no=?4 and user_id=?5")
+    List<ProductionCart> getCartListByTypeName(String type, String user_name,String name_of_item,String sales_no,String user_id);
 
     @Query("select sk from ProductionCart sk where user_name=?3 and type=?2 and user_id=?1 and name_of_item=?4")
     List<ProductionCart> getCartListByUserName(String user_id, String type, String user_name, String name_of_item);
@@ -34,7 +34,7 @@ public interface ProductionCartRepo extends CrudRepository<ProductionCart, Long>
     @Transactional
     int updateQtyByBarcode(String user_name, String name_of_item, int qty, String user_id);
 
-    @Query("select qty from ProductionCart qty where name_of_item=?3 and user_name=?2 and type=?1")
+    @Query("select qty from ProductionCart where name_of_item=?3 and user_name=?2 and type=?1")
     int getCartQtyBySalesNo(String type, String user_name,String name_of_item);
 
 }

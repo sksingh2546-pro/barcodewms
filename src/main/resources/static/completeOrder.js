@@ -51,6 +51,7 @@ function getSalesData( ){
                    close: true
                }).showToast();
 
+
                for (var i = 0; i < result.salesNo.length; i++) {
                    document.getElementById("todayStockTable").innerHTML +=
                        "<tr>" +

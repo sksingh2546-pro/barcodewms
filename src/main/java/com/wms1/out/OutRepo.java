@@ -9,18 +9,19 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface OutRepo extends CrudRepository<Out,Integer> {
+public interface OutRepo extends CrudRepository<Out, Integer> {
 
     @Query("select out from Out out where status=0")
     List<Out> getOutData();
-    @Query("select out from Out out where status=0 and user_name=?1")
+
+    @Query("select out from Out out where status=2 and user_name=?1")
     List<Out> getOutData(String user_name);
 
     @Modifying
-    @Query(value = "update sales_no set status=1 where sales_no=?1 and user_name=?2",nativeQuery = true)
+    @Query(value = "update sales_no set status=2 where sales_no=?1 and user_name=?2", nativeQuery = true)
     @Transactional
-    int updateStatus(String sales_no,String user_name);
+    int updateStatus(String sales_no, String user_name);
 
     @Query("select out from Out out where sales_no=?1 and user_name=?2")
-    List<Out> checkOutData(String sales_no,String user_name);
+    List<Out> checkOutData(String sales_no, String user_name);
 }

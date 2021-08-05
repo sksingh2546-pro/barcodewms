@@ -74,8 +74,14 @@ public class AddProductController {
     public Map<String, Integer> getQtyByNameOfItem(@RequestParam("user_name") String user_name,
                                                    @RequestParam("name_of_item") String name_of_item) {
         int qty = 0;
+        int value = 0;
         try {
-            int value = productionCartRepo.getCartQtyBySalesNo("out", user_name, name_of_item);
+            value = productionCartRepo.getCartQtyBySalesNo("out", user_name, name_of_item);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             qty = addProductRepo.getNameOfItem(user_name, name_of_item);
             qty -= value;
         } catch (Exception ignored) {

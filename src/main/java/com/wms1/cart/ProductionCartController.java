@@ -28,8 +28,7 @@ public class ProductionCartController {
 
         if (productionCart.getType().equals("out")) {
             List<ProductionCart> productionCartList = productionCartRepo.getCartListByTypeName(
-                    productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getSales_no());
-
+                    productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getSales_no(), productionCart.getUser_id());
             if (productionCartList.size() == 0) {
                 List<AddProduct> productList = addProductRepo.getProductBySkuNameList(
                         productionCart.getName_of_item(), productionCart.getUser_name());
@@ -58,7 +57,12 @@ public class ProductionCartController {
                         message = "{\"message\":\"Extra Added:" + v + "\"}";
                         return message;
                     } else {
-                        int a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
+                        int a = 0;
+                        try {
+                            a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         if (a != 0) {
                             message = "{\"message\":\"Successful\"}";
                         }
