@@ -28,7 +28,7 @@ public class ProductionCartController {
 
         if (productionCart.getType().equals("out")) {
             List<ProductionCart> productionCartList = productionCartRepo.getCartListByTypeName(
-                    productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item());
+                    productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getSales_no());
 
             if (productionCartList.size() == 0) {
                 List<AddProduct> productList = addProductRepo.getProductBySkuNameList(

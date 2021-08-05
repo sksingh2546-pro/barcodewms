@@ -72,19 +72,18 @@ public class AddProductController {
 
     @GetMapping("getQtyByNameOfItem")
     public Map<String, Integer> getQtyByNameOfItem(@RequestParam("user_name") String user_name,
-                                                  @RequestParam("name_of_item") String name_of_item){
-        int qty=0;
-        try{
-           qty=addProductRepo.getNameOfItem(user_name,name_of_item);
-        }catch (Exception e){
-           qty=0;
+                                                   @RequestParam("name_of_item") String name_of_item) {
+        int qty = 0;
+        try {
+            int value = productionCartRepo.getCartQtyBySalesNo("out", user_name, name_of_item);
+            qty = addProductRepo.getNameOfItem(user_name, name_of_item);
+            qty -= value;
+        } catch (Exception ignored) {
         }
-        Map<String, Integer> hMap=new HashMap<>();
-        hMap.put("qty",qty);
-
+        Map<String, Integer> hMap = new HashMap<>();
+        hMap.put("qty", qty);
         return hMap;
     }
-
 
     @PostMapping("updateStockData")
     public String getBarcodeProduct(@RequestBody AddProduct addProduct, @RequestParam("sales_no") String sales_no) {
@@ -416,7 +415,7 @@ public class AddProductController {
                             if (update > 0) {
                                 message[0] = "{\"message\":\"Updated\"}";
                                 int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
-                           int b=a;
+                                int b = a;
                             }
                             TodayOut todayOut = new TodayOut();
                             todayOut.setName_of_item(addProduct.getName_of_item());
@@ -431,7 +430,7 @@ public class AddProductController {
                             todayOut.setUser_name(addProduct.getUser_name());
                             todayOutRepo.save(todayOut);
                         }
-                    }else {
+                    } else {
                         int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
                     }
                 }
