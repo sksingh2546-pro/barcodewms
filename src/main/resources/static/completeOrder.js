@@ -81,7 +81,7 @@ function confirmed(element) {
   var ed=element.parentNode.parentNode;
    var sales=ed.getElementsByTagName("td")[1].innerHTML;
    var XHR2 = new XMLHttpRequest();
-      XHR2.open("POST", "/api/updateSalesNo?sales_no="+sales+"&user_name="+localStorage.getItem("user_name"));
+      XHR2.open("POST", "/api/updateSalesNo1?sales_no="+sales+"&user_name="+localStorage.getItem("user_name"));
       XHR2.onload = function() {
              console.log(XHR2.responseText);
              var response = JSON.parse(XHR2.responseText);
