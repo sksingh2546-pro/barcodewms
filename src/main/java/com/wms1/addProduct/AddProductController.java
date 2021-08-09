@@ -378,7 +378,7 @@ public class AddProductController {
                         addProduct1.getName_of_item(), addProduct1.getUser_name());
                 if (update > 0) {
                     message[0] = "{\"message\":\"Updated\"}";
-                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id);
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id );
                 }
             } else {
                 int insert = addProductRepo.insertData(addProduct1.getName_of_item(), addProduct1.getNo_of_pcs(),
@@ -420,7 +420,7 @@ public class AddProductController {
                                     addProduct.getName_of_item(), addProduct.getUser_name());
                             if (update > 0) {
                                 message[0] = "{\"message\":\"Updated\"}";
-                                int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
+                                int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(),addProduct.getSales_no());
                                 int b = a;
                             }
                             TodayOut todayOut = new TodayOut();
@@ -437,7 +437,7 @@ public class AddProductController {
                             todayOutRepo.save(todayOut);
                         }
                     } else {
-                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id());
+                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(),addProduct.getSales_no());
                     }
                 }
         );
