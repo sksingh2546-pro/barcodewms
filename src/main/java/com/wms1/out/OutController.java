@@ -51,4 +51,13 @@ public class OutController {
         }
         return message;
     }
+  @PostMapping("/updateSalesNo1")
+    public String updateSalesNo1(@RequestParam("sales_no") String sales_no, @RequestParam("user_name") String user_name) {
+        String message = "{\"message\":\"Unsuccessful\"}";
+        int update = outRepo.updateStatus1(sales_no, user_name);
+        if (update > 0) {
+            message = "{\"message\":\"Successful\"}";
+        }
+        return message;
+    }
 }
