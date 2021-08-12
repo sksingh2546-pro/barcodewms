@@ -7,10 +7,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,12 +23,12 @@ public class TodayOutController {
     public Map<String, List<OutProductModel>> getSUmOfQuantity(@RequestParam("date") String date,
                                                                @RequestParam("user_name") String user_name) {
 
-        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(user_name,date);
+        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(user_name, date);
         List<OutProductModel> addProductModels1 = new ArrayList<>();
         for (TodayOut nameOfProduct : addProductModels) {
-            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(),user_name, date,
+            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(), user_name, date,
                     nameOfProduct.getSales_no());
-            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct.getName_of_item(),user_name, date,
+            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct.getName_of_item(), user_name, date,
                     nameOfProduct.getSales_no());
             if (addProduct.size() > 0) {
                 OutProductModel outProductModel = new OutProductModel(addProduct.get(0).getName_of_item(),
@@ -65,12 +62,12 @@ public class TodayOutController {
                                  @RequestParam("user_name") String user_name
     ) throws IOException {
 
-        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(date, to,user_name);
+        Set<TodayOut> addProductModels = todayOutRepo.getNameOfItem1(date, to, user_name);
         List<OutProductModel> addProductModels1 = new ArrayList<>();
         for (TodayOut nameOfProduct : addProductModels) {
-            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(), date, to,user_name,nameOfProduct.getSales_no());
+            int qty = todayOutRepo.sumOfQuantity1(nameOfProduct.getName_of_item(), date, to, user_name, nameOfProduct.getSales_no());
             List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct.getName_of_item(), date,
-                    to,user_name,nameOfProduct.getSales_no());
+                    to, user_name, nameOfProduct.getSales_no());
             if (addProduct.size() > 0) {
                 OutProductModel outProductModel = new OutProductModel(addProduct.get(0).getName_of_item(),
                         addProduct.get(0).getNo_of_pcs()
@@ -206,26 +203,26 @@ public class TodayOutController {
 
     @GetMapping("getOutDataForTelly")
     public Map<String, List<TellyOutModel>> getOutDataForTelly(
-            @RequestParam("user_name") String user_name,@RequestParam("sales_no") String sales_no) {
-        Set<String> addProductModels = todayOutRepo.getNameOfItem(user_name,sales_no);
+            @RequestParam("user_name") String user_name, @RequestParam("sales_no") String sales_no) {
+        Set<String> addProductModels = todayOutRepo.getNameOfItem(user_name, sales_no);
         List<TellyOutModel> addProductModels1 = new ArrayList<>();
         for (String nameOfProduct : addProductModels) {
-            int qty = todayOutRepo.sumOfQuantity(nameOfProduct, user_name,sales_no);
-            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct, user_name,sales_no);
+            int qty = todayOutRepo.sumOfQuantity(nameOfProduct, user_name, sales_no);
+            List<TodayOut> addProduct = todayOutRepo.getDataWithNameOfItem(nameOfProduct, user_name, sales_no);
             if (addProduct.size() > 0) {
-                TellyOutModel tellyOutModel=new TellyOutModel(
-                        nameOfProduct,addProduct.get(0).getNo_of_pcs(),qty,addProduct.get(0).getPer_pcs_weight()
-                        ,addProduct.get(0).getCarton_gross_weight(),addProduct.get(0).getCarton_gross_weight(),
+                TellyOutModel tellyOutModel = new TellyOutModel(
+                        nameOfProduct, addProduct.get(0).getNo_of_pcs(), qty, addProduct.get(0).getPer_pcs_weight()
+                        , addProduct.get(0).getCarton_gross_weight(), addProduct.get(0).getCarton_gross_weight(),
                         addProduct.get(0).getHsn(),
-                        user_name,sales_no,addProduct.get(0).getDate());
+                        user_name, sales_no, addProduct.get(0).getDate());
                 addProductModels1.add(tellyOutModel);
             }
         }
         HashMap<String, List<TellyOutModel>> hMap = new HashMap<>();
         hMap.put("out", addProductModels1);
         return hMap;
-
-
     }
+
+
 
 }

@@ -378,7 +378,7 @@ public class AddProductController {
                         addProduct1.getName_of_item(), addProduct1.getUser_name());
                 if (update > 0) {
                     message[0] = "{\"message\":\"Updated\"}";
-                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id );
+                    int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id);
                 }
             } else {
                 int insert = addProductRepo.insertData(addProduct1.getName_of_item(), addProduct1.getNo_of_pcs(),
@@ -420,7 +420,7 @@ public class AddProductController {
                                     addProduct.getName_of_item(), addProduct.getUser_name());
                             if (update > 0) {
                                 message[0] = "{\"message\":\"Updated\"}";
-                                int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(),addProduct.getSales_no());
+                                int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(), addProduct.getSales_no());
                                 int b = a;
                             }
                             TodayOut todayOut = new TodayOut();
@@ -437,11 +437,48 @@ public class AddProductController {
                             todayOutRepo.save(todayOut);
                         }
                     } else {
-                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(),addProduct.getSales_no());
+                        int a = productionCartRepo.deleteCartItem(addProduct.getUser_name(), addProduct.getName_of_item(), addProduct.getType(), addProduct.getUser_id(), addProduct.getSales_no());
                     }
                 }
         );
         return message[0];
     }
+
+
+    @PostMapping("updateAfterOrderComplete")
+    public String updateAfterOrderComplete(@RequestBody TellyOutModel tellyOutModel) {
+        String[] message = {"{\"message\":\"UnSuccessful\"}"};
+
+
+        List<AddProduct> addProducts = addProductRepo.getProductBySkuNameList(tellyOutModel.getName_of_item(),
+                tellyOutModel.getWarehouse());
+
+        List<TodayOut> todayOutList = todayOutRepo.getDataWithNameOfItem(tellyOutModel.getName_of_item(),
+                tellyOutModel.getWarehouse(), tellyOutModel.getSales_no());
+
+        if (!addProducts.isEmpty()) {
+            if (!todayOutList.isEmpty()) {
+                int changeTodayOut = todayOutRepo.updateQtyExistingItem(tellyOutModel.getQty(),
+                        tellyOutModel.getWarehouse(),
+                        tellyOutModel.getSales_no(),
+                        tellyOutModel.getName_of_item());
+            }
+            int changeQty = tellyOutModel.getQty() - todayOutList.get(0).getQty();
+            int changeAddProductValue = addProductRepo.updateProduction(addProducts.get(0).getQty() + changeQty,
+                    addProducts.get(0).getName_of_item(), addProducts.get(0).getUser_name());
+
+
+            if (changeAddProductValue > 0) {
+                message[0] = "{\"message\":\"Successful\"}";
+            }
+
+        } else {
+
+            message[0] = "{\"message\":\"Item Not found\"}";
+        }
+
+        return message[0];
+    }
+
 
 }
