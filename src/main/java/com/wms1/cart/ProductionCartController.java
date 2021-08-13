@@ -122,7 +122,7 @@ public class ProductionCartController {
     }
 
     @PostMapping("/deleteFromCart")
-    public String deleteFromCart(@RequestParam int id) {
+    public String deleteFromCart(@RequestParam("id") int id) {
         String message = "{\"message\":\"UnSuccessful\"}";
         int delete = productionCartRepo.deleteCartItem(id);
         if (delete != 0) {

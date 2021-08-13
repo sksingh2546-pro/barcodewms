@@ -445,7 +445,7 @@ public class AddProductController {
     }
 
 
-    @PostMapping("updateAfterOrderComplete")
+    @PostMapping("/updateAfterOrderComplete")
     public String updateAfterOrderComplete(@RequestBody TellyOutModel tellyOutModel) {
         String[] message = {"{\"message\":\"UnSuccessful\"}"};
 
@@ -463,7 +463,7 @@ public class AddProductController {
                         tellyOutModel.getSales_no(),
                         tellyOutModel.getName_of_item());
             }
-            int changeQty = tellyOutModel.getQty() - todayOutList.get(0).getQty();
+            int changeQty = todayOutList.get(0).getQty() - tellyOutModel.getQty();
             int changeAddProductValue = addProductRepo.updateProduction(addProducts.get(0).getQty() + changeQty,
                     addProducts.get(0).getName_of_item(), addProducts.get(0).getUser_name());
 

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -59,5 +60,6 @@ public interface TodayOutRepo extends CrudRepository<TodayOut, Long> {
 
     @Modifying
     @Query(value = "update today_out set qty=?1 where user_name=?2 and sales_no=?3 and name_of_item=?4",nativeQuery = true)
+    @Transactional
     int updateQtyExistingItem(int qty, String user_name, String sales_no, String name_of_item);
 }
