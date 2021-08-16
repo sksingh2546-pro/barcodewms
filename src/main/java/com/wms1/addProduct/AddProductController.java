@@ -453,7 +453,6 @@ public class AddProductController {
     public String updateAfterOrderComplete(@RequestBody TellyOutModel tellyOutModel) {
         String[] message = {"{\"message\":\"UnSuccessful\"}"};
 
-
         List<AddProduct> addProducts = addProductRepo.getProductBySkuNameList(tellyOutModel.getName_of_item(),
                 tellyOutModel.getWarehouse());
 
