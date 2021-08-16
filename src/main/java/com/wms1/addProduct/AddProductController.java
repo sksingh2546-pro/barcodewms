@@ -138,8 +138,6 @@ public class AddProductController {
         HashMap<String, List<AddProductModel>> hMap = new HashMap<>();
         hMap.put("sum", addProductModels1);
         return hMap;
-
-
     }
 
     @GetMapping("getTotalInTotalOut")
@@ -388,6 +386,9 @@ public class AddProductController {
                     message[0] = "{\"message\":\"Successful\"}";
                     int a = productionCartRepo.deleteCartItem(addProduct1.getUser_name(), addProduct1.getName_of_item(), type, user_id);
                 }
+            }
+            List<TodayIn> list = todayInRepo.getItemByName(sdf.format(date) , addProduct1.getUser_name(), addProduct1.getName_of_item());
+            if (list.isEmpty()) {
                 TodayIn todayIn = new TodayIn();
                 todayIn.setName_of_item(addProduct1.getName_of_item());
                 todayIn.setNo_of_pcs(addProduct1.getNo_of_pcs());
@@ -399,6 +400,9 @@ public class AddProductController {
                 todayIn.setQty(addProduct1.getQty());
                 todayIn.setUser_name(addProduct1.getUser_name());
                 todayInRepo.save(todayIn);
+            } else {
+                int a = todayInRepo.updateTodayIn(list.get(0).getQty() + addProduct1.getQty(), addProduct1.getName_of_item(), addProduct1.getUser_name());
+                System.out.println(a);
             }
         });
 
