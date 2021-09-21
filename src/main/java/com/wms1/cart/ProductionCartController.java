@@ -27,64 +27,73 @@ public class ProductionCartController {
         productionCart.setDate(sdf.format(date));
 
         if (productionCart.getType().equals("out")) {
-            List<ProductionCart> productionCartList = productionCartRepo.getCartListByTypeName(
-                    productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getSales_no(), productionCart.getUser_id());
-            if (productionCartList.size() == 0) {
-                List<AddProduct> productList = addProductRepo.getProductBySkuNameList(
-                        productionCart.getName_of_item(), productionCart.getUser_name());
-                if (productList.size() > 0) {
-                    if (productList.get(0).getQty() < productionCart.getQty()) {
-                        int v = productionCart.getQty() - productList.get(0).getQty();
-                        message = "{\"message\":\"Extra Added:" + v + "\"}";
-                        return message;
-                    } else {
-                        ProductionCart production = productionCartRepo.save(productionCart);
-                        if (production.getId() != 0) {
-                            message = "{\"message\":\"Successful\"}";
+            if (Integer.parseInt(productionCart.getSales_no()) > 0) {
+                List<ProductionCart> productionCartList = productionCartRepo.getCartListByTypeName(
+                        productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getSales_no(), productionCart.getUser_id());
+                if (productionCartList.size() == 0) {
+                    List<AddProduct> productList = addProductRepo.getProductBySkuNameList(
+                            productionCart.getName_of_item(), productionCart.getUser_name());
+                    if (productList.size() > 0) {
+                        if (productList.get(0).getQty() < productionCart.getQty()) {
+                            int v = productionCart.getQty() - productList.get(0).getQty();
+                            message = "{\"message\":\"Extra Added:" + v + "\"}";
                             return message;
+                        } else {
+                            ProductionCart production = productionCartRepo.save(productionCart);
+                            if (production.getId() != 0) {
+                                message = "{\"message\":\"Successful\"}";
+                                return message;
+                            }
                         }
-                    }
-                } else {
-                    return message;
-                }
-            } else {
-                List<AddProduct> productList = addProductRepo.getProductBySkuNameList(
-                        productionCart.getName_of_item(), productionCart.getUser_name());
-                if (productList.size() > 0) {
-                    int qty = productionCartList.stream().mapToInt(ProductionCart::getQty).sum();
-                    if (productList.get(0).getQty() < qty) {
-                        int v = qty - productList.get(0).getQty();
-                        message = "{\"message\":\"Extra Added:" + v + "\"}";
-                        return message;
                     } else {
-                        int a = 0;
-                        try {
-                            a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (a != 0) {
-                            message = "{\"message\":\"Successful\"}";
-                        }
+                        return message;
                     }
                 } else {
-                    return message;
+                    List<AddProduct> productList = addProductRepo.getProductBySkuNameList(
+                            productionCart.getName_of_item(), productionCart.getUser_name());
+                    if (productList.size() > 0) {
+                        int qty = productionCartList.stream().mapToInt(ProductionCart::getQty).sum();
+                        if (productList.get(0).getQty() < qty) {
+                            int v = qty - productList.get(0).getQty();
+                            message = "{\"message\":\"Extra Added:" + v + "\"}";
+                            return message;
+                        } else {
+                            int a = 0;
+                            try {
+                                a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (a != 0) {
+                                message = "{\"message\":\"Successful\"}";
+                            }
+                        }
+                    } else {
+                        return message;
+                    }
                 }
+            }else {
+                return message;
             }
         } else {
-            List<ProductionCart> productionCartList = productionCartRepo.getCartListByUserName(
-                    productionCart.getUser_id(), productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item());
 
-            if (productionCartList.size() == 0) {
-                ProductionCart production = productionCartRepo.save(productionCart);
-                if (production.getId() != 0) {
-                    message = "{\"message\":\"Successful\"}";
+            if (!productionCart.getName_of_item().isEmpty() || productionCart.getName_of_item()!=null) {
+                List<ProductionCart> productionCartList = productionCartRepo.getCartListByUserName(
+                        productionCart.getUser_id(), productionCart.getType(), productionCart.getUser_name(), productionCart.getName_of_item());
+
+                if (productionCartList.size() == 0) {
+                    ProductionCart production = productionCartRepo.save(productionCart);
+                    if (production.getId() != 0) {
+                        message = "{\"message\":\"Successful\"}";
+                    }
+                } else {
+                    int a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
+                    if (a != 0) {
+                        message = "{\"message\":\"Successful\"}";
+                    }
                 }
             } else {
-                int a = productionCartRepo.updateQtyByBarcode(productionCart.getUser_name(), productionCart.getName_of_item(), productionCart.getQty(), productionCart.getUser_id());
-                if (a != 0) {
-                    message = "{\"message\":\"Successful\"}";
-                }
+                return message;
             }
         }
 
